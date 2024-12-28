@@ -27,6 +27,20 @@ export default function HomePage() {
           <li>📟 Interactive Cart Screen: A Raspberry Pi with an integrated screen displays real-time cart information for users.</li>
         </ul>
       </div>
+
+      {/* Looking to the Future Section */}
+      <div className="mt-16 max-w-2xl">
+        <h2 className="text-3xl font-bold text-white mb-6">
+          Looking to the Future
+        </h2>
+        <p className="text-lg text-gray-400 leading-relaxed">
+          We're exploring innovative ways to enhance the customer experience:
+        </p>
+        <ul className="text-lg text-gray-400 list-none space-y-4 mt-4">
+          <li>💬 AI Communication: An AI-powered large language model (LLM) capable of conversing with customers like a friendly and knowledgeable store clerk.</li>
+          <li>📊 Taring: A way for administrators to tare the cabinet's load cells through the website. </li>
+        </ul>
+      </div>
     </div>
   );
 }
