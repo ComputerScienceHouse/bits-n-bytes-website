@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Link>
             </h1>
               <div className="space-x-4">
+                <Link href="/admin" className="text-black hover:text-blue-500">Admin</Link>
                 <Link href="/about" className="text-black hover:text-blue-500">About</Link>
                 <Link href="/contact" className="text-black hover:text-blue-500">Contact</Link>
                 <Link href="/funding" className="text-black hover:text-blue-500">Funding</Link>
