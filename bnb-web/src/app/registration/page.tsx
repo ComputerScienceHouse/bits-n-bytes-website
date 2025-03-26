@@ -15,10 +15,31 @@ export default function RegistrationPage() {
     nfcToken: ''
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically handle the form submission
-    console.log('Form submitted:', formData)
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      if (response.ok) {
+        console.log('User registered successfully')
+        // resets the form after successful registration
+        setFormData({
+          username: '',
+          email: '',
+          phone: '',
+          nfcToken: ''
+        })
+      } else {
+        console.error('Failed to register user')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
