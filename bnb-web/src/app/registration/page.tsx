@@ -1,11 +1,11 @@
 'use client'
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { UserPlus } from 'lucide-react'
-import { useState } from "react"
+import { UserPlus, RadioTower } from "lucide-react"
 
 export default function RegistrationPage() {
   const [formData, setFormData] = useState({
@@ -14,40 +14,55 @@ export default function RegistrationPage() {
     phone: '',
     nfcToken: ''
   })
+  const [loading, setLoading] = useState(false)
+  const [nfcLoading, setNfcLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
+
     try {
       const response = await fetch('/api/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
+
       if (response.ok) {
         console.log('User registered successfully')
-        // resets the form after successful registration
-        setFormData({
-          username: '',
-          email: '',
-          phone: '',
-          nfcToken: ''
-        })
+        setFormData({ username: '', email: '', phone: '', nfcToken: '' })
       } else {
         console.error('Failed to register user')
       }
     } catch (error) {
       console.error('Error:', error)
     }
+
+    setLoading(false)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleNfcScan = async () => {
+    setNfcLoading(true)
+
+    try {
+      const response = await fetch('/api/scan-nfc')
+      const data = await response.json()
+
+      if (data.uid) {
+        setFormData(prev => ({ ...prev, nfcToken: data.uid }))
+      } else {
+        console.error('NFC scan failed')
+      }
+    } catch (error) {
+      console.error('Error scanning NFC:', error)
+    }
+
+    setNfcLoading(false)
   }
 
   return (
@@ -68,56 +83,31 @@ export default function RegistrationPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                name="username"
-                placeholder="Enter username"
-                value={formData.username}
-                onChange={handleChange}
-                required
-              />
+              <Input id="username" name="username" placeholder="Enter username" value={formData.username} onChange={handleChange} required />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter email address"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
+              <Input id="email" name="email" type="email" placeholder="Enter email address" value={formData.email} onChange={handleChange} required />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                placeholder="Enter phone number"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
+              <Input id="phone" name="phone" type="tel" placeholder="Enter phone number" value={formData.phone} onChange={handleChange} required />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="nfcToken">NFC Token Number</Label>
-              <Input
-                id="nfcToken"
-                name="nfcToken"
-                placeholder="Enter NFC token number"
-                value={formData.nfcToken}
-                onChange={handleChange}
-                required
-              />
+              <div className="flex space-x-2">
+                <Input id="nfcToken" name="nfcToken" placeholder="Tap card to scan" value={formData.nfcToken} onChange={handleChange} required />
+                <Button type="button" onClick={handleNfcScan} disabled={nfcLoading}>
+                  {nfcLoading ? 'Scanning...' : <RadioTower />}
+                </Button>
+              </div>
             </div>
 
-            <Button type="submit" className="w-full">
-              Register User
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Registering...' : 'Register User'}
             </Button>
           </form>
         </CardContent>
