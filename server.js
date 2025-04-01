@@ -38,7 +38,7 @@ app.post('/api/register', async (req, res) => {
     const { username, email, phone, nfcToken } = req.body;
 
     // Default balance for new users
-    const defaultBalance = 10.00;
+    const defaultBalance = 25.00;
 
     try {
         await pool.query('BEGIN');
