@@ -22,6 +22,9 @@ export default function RegistrationPage() {
     setLoading(true)
 
     try {
+      // Print to console for debugging
+      console.log('Form Data:', formData)
+      
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
