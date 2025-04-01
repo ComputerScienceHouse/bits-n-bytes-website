@@ -37,13 +37,31 @@ function authenticateToken(req, res, next) {
 app.post('/api/register', async (req, res) => {
     const { username, email, phone, nfcToken } = req.body;
 
+    // Default balance for new users
+    const defaultBalance = 10.00;
+
     try {
+        await pool.query('BEGIN');
+        
         const result = await pool.query(
-            'INSERT INTO users (username, email, phone, nfc_token) VALUES ($1, $2, $3, $4) RETURNING *',
-            [username, email, phone, nfcToken]
+            'INSERT INTO users (name, email, phone, balance, thumb_img) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, phone, balance, thumb_img',
+            [username, email, phone, defaultBalance, null] // thumb_img is null
         );
-        res.status(201).json(result.rows[0]);
+        const user = result.rows[0];
+
+        // Insert the NFC token into the nfc_data table
+        await pool.query(
+            'INSERT INTO nfc_data (assigned_user, id) VALUES ($1, $2)',
+            [user.id, nfcToken]
+        );
+
+        // Commit the transaction
+        await pool.query('COMMIT');
+
+        res.status(201).json(user);
     } catch (error) {
+        // Rollback the transaction in case of error
+        await pool.query('ROLLBACK');
         console.error('Error registering user:', error);
         res.status(500).send('Server error');
     }
