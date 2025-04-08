@@ -2,34 +2,82 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { connectMQTT } from "@/lib/mqttClient"
 
 type ButtonState = 'neutral' | 'yellow' | 'green'
 
 export default function TareScreen() {
-  // Initialize state for all 16 buttons
   const [buttonStates, setButtonStates] = useState<ButtonState[]>(Array(16).fill('neutral'))
+  const mqttRef = useRef<any>(null)
 
-  // Function to cycle through button states
+  useEffect(() => {
+    const mqttClient = connectMQTT()
+    mqttRef.current = mqttClient
+
+    mqttClient.subscribe('tare/status')
+
+    mqttClient.on('message', (topic: string, message: Buffer) => {
+      if (topic === 'tare/status') {
+        const data = JSON.parse(message.toString())
+        console.log('Tare status received:', data)
+      }
+    })
+
+    return () => {
+      mqttClient.end()
+    }
+  }, [])
+
   const cycleState = (index: number) => {
     setButtonStates(prevStates => {
       const newStates = [...prevStates]
-      switch (newStates[index]) {
+      const current = newStates[index]
+
+      let next: ButtonState
+      switch (current) {
         case 'neutral':
-          newStates[index] = 'yellow'
+          next = 'yellow'
           break
         case 'yellow':
-          newStates[index] = 'green'
+          next = 'green'
           break
         case 'green':
-          newStates[index] = 'neutral'
+          next = 'neutral'
           break
       }
+
+      newStates[index] = next
+
+      // Only send MQTT on transition TO green
+      if (next === 'green') {
+        const shelfNumber = Math.floor(index / 4) + 1
+        const slotIndex = index % 4
+        const mac = getMacForShelf(shelfNumber)
+
+        const tarePayload = {
+          mac,
+          slot: slotIndex
+        }
+
+        mqttRef.current?.publish('tare/update', JSON.stringify(tarePayload))
+        console.log('MQTT Tare Sent:', tarePayload)
+      }
+
       return newStates
     })
   }
 
-  // Function to get button color based on state
+  const getMacForShelf = (shelfNumber: number): string => {
+    const shelfMacMap: Record<number, string> = {
+      1: "80:65:99:49:EF:8E",
+      2: "80:65:99:E3:EF:50",
+      3: "80:65:99:E3:8B:92",
+      4: "MAC_1"
+    }
+    return shelfMacMap[shelfNumber]
+  }
+
   const getButtonStyles = (state: ButtonState) => {
     switch (state) {
       case 'yellow':
@@ -41,10 +89,9 @@ export default function TareScreen() {
     }
   }
 
-  // Function to create a shelf of buttons
   const renderShelf = (shelfNumber: number, startIndex: number) => {
     const positions = ['A', 'B', 'C', 'D']
-    
+
     return (
       <Card className="p-4">
         <CardHeader className="p-2">
@@ -74,14 +121,12 @@ export default function TareScreen() {
     <div className="min-h-screen p-4 bg-gradient-to-b from-background to-background/50">
       <div className="max-w-5xl mx-auto space-y-8 pt-8">
         <h1 className="text-3xl font-bold text-center mb-8">Tare Screen</h1>
-        
-        {/* Top row - Shelves 1 and 2 */}
+
         <div className="grid md:grid-cols-2 gap-8">
           {renderShelf(1, 0)}
           {renderShelf(2, 4)}
         </div>
-        
-        {/* Bottom row - Shelves 3 and 4 */}
+
         <div className="grid md:grid-cols-2 gap-8">
           {renderShelf(3, 8)}
           {renderShelf(4, 12)}
