@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState, useEffect, useRef } from "react"
 import { connectMQTT } from "@/lib/mqttClient"
+import type { MqttClient } from 'mqtt'
 
 type ButtonState = 'neutral' | 'yellow' | 'green'
 
 export default function TareScreen() {
   const [buttonStates, setButtonStates] = useState<ButtonState[]>(Array(16).fill('neutral'))
-  const mqttRef = useRef<any>(null)
+  const mqttRef = useRef<MqttClient | null>(null)
 
   useEffect(() => {
     const mqttClient = connectMQTT()
