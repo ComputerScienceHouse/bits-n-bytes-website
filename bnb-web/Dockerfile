@@ -2,7 +2,7 @@
 FROM node:18-alpine as build
 
 # Install Python and build tools for native modules
-RUN apk add --no-cache python3 make g++ linux-headers \
+RUN apk add --no-cache python3 make g++ linux-headers libusb-dev eudev-dev \
   && ln -sf python3 /usr/bin/python
 
 # Set the working directory inside the container
