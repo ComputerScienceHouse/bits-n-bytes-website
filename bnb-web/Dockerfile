@@ -1,6 +1,10 @@
 # Use an official Node.js runtime as the base image
 FROM node:18-alpine as build
 
+# Install Python and build tools for native modules
+RUN apk add --no-cache python3 make g++ \
+  && ln -sf python3 /usr/bin/python  # node-gyp needs the 'python' alias
+
 # Set the working directory inside the container
 WORKDIR /app
 
