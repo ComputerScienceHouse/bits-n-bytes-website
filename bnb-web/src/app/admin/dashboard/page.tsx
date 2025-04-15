@@ -12,14 +12,14 @@ export default function AdminPage() {
           <CardDescription>Select an administrative function</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Link href="/registration">
+          <Link href="/admin/dashboard/registration">
             <Button className="w-full h-16 text-lg" variant="outline">
               <UserPlus className="mr-2 h-5 w-5" />
               Registration
             </Button>
           </Link>
           
-          <Link href="/tare-screen">
+          <Link href="/admin/dashboard/tare-screen">
             <Button className="w-full h-16 text-lg" variant="outline">
               <Scale className="mr-2 h-5 w-5" />
               Tare Screen
