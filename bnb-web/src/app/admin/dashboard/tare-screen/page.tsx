@@ -14,7 +14,7 @@ export default function TareScreen() {
 
   const [formShelfLetter, setFormShelfLetter] = useState('A')
   const [formShelfNumber, setFormShelfNumber] = useState(0)
-  const [formItemType, setFormItemType] = useState('Chips')
+  const [formItemType, setFormItemType] = useState('Sour Patch Kids')
   const [formItemQuantity, setFormItemQuantity] = useState(0)
   const itemOptions = [
     'Sour Patch Kids', 
