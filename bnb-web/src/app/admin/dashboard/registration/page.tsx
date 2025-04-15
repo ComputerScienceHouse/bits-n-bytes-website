@@ -17,25 +17,54 @@ export default function RegistrationPage() {
   const [loading, setLoading] = useState(false)
   const [nfcLoading, setNfcLoading] = useState(false)
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   setLoading(true)
+
+  //   try {
+  //     // Print to console for debugging
+  //     console.log('Form Data:', formData)
+      
+  //     const response = await fetch('/api/register', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(formData)
+  //     })
+
+  //     if (response.ok) {
+  //       console.log('User registered successfully')
+  //       setFormData({ username: '', email: '', phone: '', nfcToken: '' })
+  //     } else {
+  //       console.error('Failed to register user')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error)
+  //   }
+
+  //   setLoading(false)
+  // }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
       // Print to console for debugging
-      console.log('Form Data:', formData)
+      // console.log('Form Data:', formData)
+
+      // TODO: redo this
+      const url = `http://localhost:8080/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc-token=${formData.nfcToken}`;
       
-      const response = await fetch('/api/register', {
+      const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: { 'Content-Type': 'application/json', 'Authorization': process.env.API_AUTH || "" },
       })
 
       if (response.ok) {
         console.log('User registered successfully')
         setFormData({ username: '', email: '', phone: '', nfcToken: '' })
       } else {
-        console.error('Failed to register user')
+        console.error('Failed to register user',response)
       }
     } catch (error) {
       console.error('Error:', error)
