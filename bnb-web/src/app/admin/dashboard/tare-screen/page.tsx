@@ -10,12 +10,14 @@ type ButtonState = 'neutral' | 'yellow' | 'green'
 
 export default function TareScreen() {
   const [buttonStates, setButtonStates] = useState<ButtonState[]>(Array(16).fill('neutral'))
-  const mqttRef = useRef<MqttClient | null>(null)
+  const [itemData, setItemData] = useState<Record<string, { item: string; quantity: number }>>({})
+  const [pendingTare, setPendingTare] = useState<Record<string, number[]>>({})
 
   const [formShelfLetter, setFormShelfLetter] = useState('A')
   const [formShelfNumber, setFormShelfNumber] = useState(0)
   const [formItemType, setFormItemType] = useState('Sour Patch Kids')
   const [formItemQuantity, setFormItemQuantity] = useState(0)
+
   const itemOptions = [
     'Sour Patch Kids', 
     'Skittles Gummies',
@@ -30,6 +32,8 @@ export default function TareScreen() {
     '12 Pack Loganberry',
     'Wild Cherry Pepsi Can',
     'EMPTY']
+
+  const mqttRef = useRef<MqttClient | null>(null)
 
   useEffect(() => {
     const mqttClient = connectMQTT()
@@ -69,33 +73,35 @@ export default function TareScreen() {
 
       newStates[index] = next
 
-      // Only send MQTT on transition TO green
       if (next === 'green') {
-        const shelfNumber = Math.floor(index / 4)
+        const shelfIndex = Math.floor(index / 4)
         const slotIndex = index % 4
-        const mac = getMacForShelf(shelfNumber)
+        const mac = getMacForShelf(shelfIndex)
 
-        const tarePayload = {
-          mac,
-          slot: slotIndex
-        }
-
-        mqttRef.current?.publish('tare/update', JSON.stringify(tarePayload))
-        console.log('MQTT Tare Sent:', tarePayload)
+        setPendingTare(prev => {
+          const updated = { ...prev }
+          if (!updated[mac]) {
+            updated[mac] = []
+          }
+          if (!updated[mac].includes(slotIndex)) {
+            updated[mac].push(slotIndex)
+          }
+          return updated
+        })
       }
 
       return newStates
     })
   }
 
-  const getMacForShelf = (shelfNumber: number): string => {
+  const getMacForShelf = (shelfIndex: number): string => {
     const shelfMacMap: Record<number, string> = {
       0: "80:65:99:49:EF:8E",
       1: "80:65:99:E3:EF:50",
       2: "80:65:99:E3:8B:92",
       3: "MAC_1"
     }
-    return shelfMacMap[shelfNumber]
+    return shelfMacMap[shelfIndex]
   }
 
   const getButtonStyles = (state: ButtonState) => {
@@ -121,14 +127,20 @@ export default function TareScreen() {
           <div className="flex gap-4 justify-center">
             {positions.map((position, idx) => {
               const buttonIndex = startIndex + idx
+              const key = `${shelfNumber}${position}`
+              const item = itemData[key]?.item || ''
+              const quantity = itemData[key]?.quantity || ''
               return (
-                <Button
-                  key={`${shelfNumber}${position}`}
-                  onClick={() => cycleState(buttonIndex)}
-                  className={`h-16 w-24 text-lg font-semibold transition-colors ${getButtonStyles(buttonStates[buttonIndex])}`}
-                >
-                  {shelfNumber}{position}
-                </Button>
+                <div className="flex flex-col items-center space-y-1" key={key}>
+                  <Button
+                    onClick={() => cycleState(buttonIndex)}
+                    className={`h-16 w-24 text-lg font-semibold transition-colors ${getButtonStyles(buttonStates[buttonIndex])}`}
+                  >
+                    {shelfNumber}{position}
+                  </Button>
+                  <span className="text-sm text-muted-foreground">{item}</span>
+                  <span className="text-sm text-muted-foreground">Qty: {quantity}</span>
+                </div>
               )
             })}
           </div>
@@ -137,26 +149,15 @@ export default function TareScreen() {
     )
   }
 
-  const resetAllButtons = () => {
-    setButtonStates(Array(16).fill('neutral'))
-  }
-
-  const tareAllButtons = () => {
-    setButtonStates(Array(16).fill('yellow'))
-  }
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const shelfLabel = `${formShelfNumber}${formShelfLetter}`
-    const updatedData = {
-      shelf: shelfLabel,
-      itemType: formItemType,
-      quantity: formItemQuantity
-    }
-
-    mqttRef.current?.publish('shelf/update', JSON.stringify(updatedData))
-    console.log('Shelf update sent:', updatedData)
+  const handleSubmitForm = () => {
+    const key = `${formShelfNumber}${formShelfLetter}`
+    setItemData(prev => ({
+      ...prev,
+      [key]: {
+        item: formItemType,
+        quantity: formItemQuantity
+      }
+    }))
   }
 
   return (
@@ -174,34 +175,51 @@ export default function TareScreen() {
           {renderShelf(3, 12)}
         </div>
 
-        <div className="flex justify-center gap-4 pt-6">
-          <Button onClick={resetAllButtons} className="bg-red-500 hover:bg-red-600">
-            Reset All
+        <div className="grid md:grid-cols-2 gap-4">
+          <Button
+            onClick={() => setButtonStates(Array(16).fill('neutral'))}
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded"
+          >
+            Reset
           </Button>
-          <Button onClick={tareAllButtons} className="bg-yellow-500 hover:bg-yellow-600 text-black">
+
+          <Button
+            onClick={() => setButtonStates(Array(16).fill('yellow'))}
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded"
+          >
             Tare All
           </Button>
         </div>
 
-        <form
-          onSubmit={handleFormSubmit}
-          className="mt-8 max-w-2xl mx-auto bg-card rounded-xl shadow-lg p-6 space-y-4"
-        >
-          <h2 className="text-2xl font-semibold text-center">Update Shelf Item</h2>
+        <Button
+          onClick={() => {
+            const payload = {
+              shelves: pendingTare
+            }
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Shelf Number</label>
-              <select
-                value={formShelfNumber}
-                onChange={e => setFormShelfNumber(Number(e.target.value))}
-                className="w-full border border-input rounded px-3 py-2 text-foreground bg-background"
-              >
-                {[0, 1, 2, 3].map(num => (
-                  <option key={num} value={num}>{num}</option>
-                ))}
-              </select>
-            </div>
+            mqttRef.current?.publish(
+              'tare/update',
+              JSON.stringify(payload),
+              { qos: 1 },
+              err => {
+                if (err) {
+                  console.error('Failed to publish:', err)
+                } else {
+                  console.log('Tare request sent:', payload)
+                  setPendingTare({})
+                }
+              }
+            )
+          }}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded"
+        >
+          Tare Selected
+        </Button>
+
+        <div className="mt-8 p-4 border rounded space-y-4 bg-card">
+          <h2 className="text-xl font-semibold">Update Shelf Item</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block mb-1 font-medium">Shelf Letter</label>
               <select
@@ -214,6 +232,20 @@ export default function TareScreen() {
                 ))}
               </select>
             </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Shelf Number</label>
+              <select
+                value={formShelfNumber}
+                onChange={e => setFormShelfNumber(Number(e.target.value))}
+                className="w-full border border-input rounded px-3 py-2 text-foreground bg-background"
+              >
+                {[0, 1, 2, 3].map(num => (
+                  <option key={num} value={num}>{num}</option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block mb-1 font-medium">Item Type</label>
               <select
@@ -237,15 +269,12 @@ export default function TareScreen() {
                 className="w-full border border-input rounded px-3 py-2 text-foreground bg-background"
               />
             </div>
+          </div>
 
-            </div>
-
-            <div className="text-center pt-4">
-              <Button type="submit" className="px-6 py-2 text-lg font-semibold">
-                Update Shelf
-              </Button>
-            </div>
-        </form>
+          <Button onClick={handleSubmitForm} className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+            Submit
+          </Button>
+        </div>
       </div>
     </div>
   )
