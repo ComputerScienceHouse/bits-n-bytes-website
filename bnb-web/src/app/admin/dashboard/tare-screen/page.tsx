@@ -194,7 +194,7 @@ export default function TareScreen() {
               </Select>
             </div>
             <div>
-              <Label>Shelf Number</Label>
+              <Label>Slot Number</Label>
               <Select onValueChange={setFormShelfNumber} defaultValue={formShelfNumber}>
                 <SelectTrigger>
                   <SelectValue className="text-grey" placeholder="Select number" />
