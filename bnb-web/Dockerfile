@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:18-alpine as build
+FROM node:23-alpine as build
 
 # Install Python and build tools for native modules
 RUN apk add --no-cache python3 make g++ linux-headers libusb-dev eudev-dev \
@@ -21,7 +21,7 @@ COPY . .
 RUN npm run build
 
 # Use a lightweight Node.js image for production
-FROM node:18-alpine as production
+FROM node:23-alpine as production
 
 # Set the working directory
 WORKDIR /app
