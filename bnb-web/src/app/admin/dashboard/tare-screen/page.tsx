@@ -2,47 +2,46 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState, useEffect, useRef } from "react"
 import { connectMQTT } from "@/lib/mqttClient"
 import type { MqttClient } from 'mqtt'
+
+const ITEM_OPTIONS = [
+  'Sour Patch Kids', 
+  'Skittles Gummies',
+  'Little Bites Chocolate',
+  'Little Bites Party',
+  'Little Bites Blueberry', 
+  'Swedish Fish Mini Tropical',
+  'Swedish Fish Original',
+  'Welch\'s Fruit Snacks',
+  'Brownie Brittle Chocolate Chip', 
+  '12 Pack Wild Cherry Pepsi', 
+  '12 Pack Loganberry',
+  'Wild Cherry Pepsi Can',
+  'EMPTY']
 
 type ButtonState = 'neutral' | 'yellow' | 'green'
 
 export default function TareScreen() {
   const [buttonStates, setButtonStates] = useState<ButtonState[]>(Array(16).fill('neutral'))
-  const [itemData, setItemData] = useState<Record<string, { item: string; quantity: number }>>({})
-  const [pendingTare, setPendingTare] = useState<Record<string, number[]>>({})
-
   const [formShelfLetter, setFormShelfLetter] = useState('A')
-  const [formShelfNumber, setFormShelfNumber] = useState(0)
-  const [formItemType, setFormItemType] = useState('Sour Patch Kids')
-  const [formItemQuantity, setFormItemQuantity] = useState(0)
-
-  const itemOptions = [
-    'Sour Patch Kids', 
-    'Skittles Gummies',
-    'Little Bites Chocolate',
-    'Little Bites Party',
-    'Little Bites Blueberry', 
-    'Swedish Fish Mini Tropical',
-    'Swedish Fish Original',
-    'Welch\'s Fruit Snacks',
-    'Brownie Brittle Chocolate Chip', 
-    '12 Pack Wild Cherry Pepsi', 
-    '12 Pack Loganberry',
-    'Wild Cherry Pepsi Can',
-    'EMPTY']
-
+  const [formShelfNumber, setFormShelfNumber] = useState('0')
+  const [formItemType, setFormItemType] = useState(ITEM_OPTIONS[0])
+  const [formItemQuantity, setFormItemQuantity] = useState('1')
   const mqttRef = useRef<MqttClient | null>(null)
 
   useEffect(() => {
     const mqttClient = connectMQTT()
     mqttRef.current = mqttClient
 
-    mqttClient.subscribe('shelf/tare')
+    mqttClient.subscribe('shelf/data')
 
     mqttClient.on('message', (topic: string, message: Buffer) => {
-      if (topic === 'shelf/tare') {
+      if (topic === 'shelf/data') {
         const data = JSON.parse(message.toString())
         console.log('Tare status received:', data)
       }
@@ -53,65 +52,56 @@ export default function TareScreen() {
     }
   }, [])
 
-  const cycleState = (index: number) => {
+  const cycleState = async (index: number) => {
+    const shelfNumber = Math.floor(index / 4)
+    const slotIndex = index % 4
+    const mac = getMacForShelf(shelfNumber)
+
     setButtonStates(prevStates => {
       const newStates = [...prevStates]
-      const current = newStates[index]
-
-      let next: ButtonState
-      switch (current) {
-        case 'neutral':
-          next = 'yellow'
-          break
-        case 'yellow':
-          next = 'green'
-          break
-        case 'green':
-          next = 'neutral'
-          break
-      }
-
-      newStates[index] = next
-
-      if (next === 'green') {
-        const shelfIndex = Math.floor(index / 4)
-        const slotIndex = index % 4
-        const mac = getMacForShelf(shelfIndex)
-
-        setPendingTare(prev => {
-          const updated = { ...prev }
-          if (!updated[mac]) {
-            updated[mac] = []
-          }
-          if (!updated[mac].includes(slotIndex)) {
-            updated[mac].push(slotIndex)
-          }
-          return updated
-        })
-      }
-
+      newStates[index] = 'yellow'
       return newStates
+    })
+
+    const payload = {
+      shelves: {
+        [mac]: {
+          slots: [slotIndex]
+        }
+      }
+    }
+
+    mqttRef.current?.publish('shelf/data', JSON.stringify(payload), { qos: 1 }, (err) => {
+      if (!err) {
+        setButtonStates(prevStates => {
+          const newStates = [...prevStates]
+          newStates[index] = 'green'
+          return newStates
+        })
+      } else {
+        console.error('Failed to publish MQTT message:', err)
+      }
     })
   }
 
-  const getMacForShelf = (shelfIndex: number): string => {
+  const getMacForShelf = (shelfNumber: number): string => {
     const shelfMacMap: Record<number, string> = {
       0: "80:65:99:49:EF:8E",
       1: "80:65:99:E3:EF:50",
       2: "80:65:99:E3:8B:92",
       3: "MAC_1"
     }
-    return shelfMacMap[shelfIndex]
+    return shelfMacMap[shelfNumber]
   }
 
   const getButtonStyles = (state: ButtonState) => {
     switch (state) {
       case 'yellow':
-        return 'bg-yellow-500 hover:bg-yellow-600'
+        return 'bg-yellow-500 text-black hover:bg-yellow-600'
       case 'green':
-        return 'bg-green-500 hover:bg-green-600'
+        return 'bg-green-500 text-white hover:bg-green-600'
       default:
-        return 'bg-secondary hover:bg-secondary/80'
+        return 'bg-secondary text-white hover:bg-secondary/80'
     }
   }
 
@@ -127,20 +117,14 @@ export default function TareScreen() {
           <div className="flex gap-4 justify-center">
             {positions.map((position, idx) => {
               const buttonIndex = startIndex + idx
-              const key = `${shelfNumber}${position}`
-              const item = itemData[key]?.item || ''
-              const quantity = itemData[key]?.quantity || ''
               return (
-                <div className="flex flex-col items-center space-y-1" key={key}>
-                  <Button
-                    onClick={() => cycleState(buttonIndex)}
-                    className={`h-16 w-24 text-lg font-semibold transition-colors ${getButtonStyles(buttonStates[buttonIndex])}`}
-                  >
-                    {shelfNumber}{position}
-                  </Button>
-                  <span className="text-sm text-muted-foreground">{item}</span>
-                  <span className="text-sm text-muted-foreground">Qty: {quantity}</span>
-                </div>
+                <Button
+                  key={`${shelfNumber}${position}`}
+                  onClick={() => cycleState(buttonIndex)}
+                  className={`h-16 w-24 text-lg font-semibold transition-colors ${getButtonStyles(buttonStates[buttonIndex])}`}
+                >
+                  {shelfNumber}{position}
+                </Button>
               )
             })}
           </div>
@@ -149,15 +133,28 @@ export default function TareScreen() {
     )
   }
 
-  const handleSubmitForm = () => {
-    const key = `${formShelfNumber}${formShelfLetter}`
-    setItemData(prev => ({
-      ...prev,
-      [key]: {
-        item: formItemType,
-        quantity: formItemQuantity
-      }
-    }))
+  const resetButtons = () => setButtonStates(Array(16).fill('neutral'))
+
+  const tareAll = () => {
+    const newStates = Array(16).fill('yellow')
+    setButtonStates(newStates)
+
+    const macMap: Record<string, number[]> = {}
+    for (let i = 0; i < 16; i++) {
+      const shelfNum = Math.floor(i / 4)
+      const slotIndex = i % 4
+      const mac = getMacForShelf(shelfNum)
+      if (!macMap[mac]) macMap[mac] = []
+      macMap[mac].push(slotIndex)
+    }
+
+    const payload = {
+      shelves: Object.fromEntries(
+        Object.entries(macMap).map(([mac, slots]) => [mac, { slots }])
+      )
+    }
+
+    mqttRef.current?.publish('shelf/data', JSON.stringify(payload), { qos: 1 })
   }
 
   return (
@@ -175,105 +172,91 @@ export default function TareScreen() {
           {renderShelf(3, 12)}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          <Button
-            onClick={() => setButtonStates(Array(16).fill('neutral'))}
-            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded"
-          >
-            Reset
-          </Button>
-
-          <Button
-            onClick={() => setButtonStates(Array(16).fill('yellow'))}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded"
-          >
-            Tare All
-          </Button>
+        <div className="flex justify-center gap-4 pt-4">
+          <Button onClick={resetButtons} className="bg-red-500 hover:bg-red-600 text-white">Reset All</Button>
+          <Button onClick={tareAll} className="bg-yellow-500 hover:bg-yellow-600 text-black">Tare All</Button>
         </div>
 
-        <Button
-          onClick={() => {
-            const payload = {
-              shelves: pendingTare
-            }
-
-            mqttRef.current?.publish(
-              'tare/update',
-              JSON.stringify(payload),
-              { qos: 1 },
-              err => {
-                if (err) {
-                  console.error('Failed to publish:', err)
-                } else {
-                  console.log('Tare request sent:', payload)
-                  setPendingTare({})
-                }
-              }
-            )
-          }}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded"
-        >
-          Tare Selected
-        </Button>
-
-        <div className="mt-8 p-4 border rounded space-y-4 bg-card">
-          <h2 className="text-xl font-semibold">Update Shelf Item</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-12 border-t pt-8">
+          <h2 className="text-2xl font-semibold mb-4 text-center">Update Shelf Info</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <label className="block mb-1 font-medium">Shelf Letter</label>
-              <select
-                value={formShelfLetter}
-                onChange={e => setFormShelfLetter(e.target.value)}
-                className="w-full border border-input rounded px-3 py-2 text-foreground bg-background"
-              >
-                {['A', 'B', 'C', 'D'].map(letter => (
-                  <option key={letter} value={letter}>{letter}</option>
-                ))}
-              </select>
+              <Label>Shelf Letter</Label>
+              <Select onValueChange={setFormShelfLetter} defaultValue={formShelfLetter}>
+                <SelectTrigger>
+                  <SelectValue className="text-grey" placeholder="Select letter" />
+                </SelectTrigger>
+                <SelectContent>
+                  {['A', 'B', 'C', 'D'].map(letter => (
+                    <SelectItem key={letter} value={letter} className="text-grey">{letter}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-
             <div>
-              <label className="block mb-1 font-medium">Shelf Number</label>
-              <select
-                value={formShelfNumber}
-                onChange={e => setFormShelfNumber(Number(e.target.value))}
-                className="w-full border border-input rounded px-3 py-2 text-foreground bg-background"
-              >
-                {[0, 1, 2, 3].map(num => (
-                  <option key={num} value={num}>{num}</option>
-                ))}
-              </select>
+              <Label>Shelf Number</Label>
+              <Select onValueChange={setFormShelfNumber} defaultValue={formShelfNumber}>
+                <SelectTrigger>
+                  <SelectValue className="text-grey" placeholder="Select number" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[0, 1, 2, 3].map(num => (
+                    <SelectItem key={num} value={num.toString()} className="text-grey">{num}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-
             <div>
-              <label className="block mb-1 font-medium">Item Type</label>
-              <select
-                value={formItemType}
-                onChange={e => setFormItemType(e.target.value)}
-                className="w-full border border-input rounded px-3 py-2 text-foreground bg-background"
-              >
-                {itemOptions.map(item => (
-                  <option key={item} value={item}>{item}</option>
-                ))}
-              </select>
+              <Label>Item Type</Label>
+              <Select onValueChange={setFormItemType} defaultValue={formItemType}>
+                <SelectTrigger>
+                  <SelectValue className="text-grey" placeholder="Select item" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ITEM_OPTIONS.map(item => (
+                    <SelectItem key={item} value={item} className="text-grey">{item}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-
             <div>
-              <label className="block mb-1 font-medium">Quantity</label>
-              <input
-                type="number"
-                min={0}
-                value={formItemQuantity}
-                onChange={e => setFormItemQuantity(Number(e.target.value))}
-                className="w-full border border-input rounded px-3 py-2 text-foreground bg-background"
-              />
+              <Label>Quantity</Label>
+              <Input type="number" value={formItemQuantity} onChange={e => setFormItemQuantity(e.target.value)} />
             </div>
           </div>
+            <div className="col-span-2 flex justify-center mt-4">
+            <Button
+              onClick={() => {
+                const shelfIndex = parseInt(formShelfNumber)
+                const slotIndex = ['A', 'B', 'C', 'D'].indexOf(formShelfLetter)
+                const mac = getMacForShelf(shelfIndex)
 
-          <Button onClick={handleSubmitForm} className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-            Submit
-          </Button>
+                const payload = {
+                  shelves: {
+                    [mac]: {
+                      slotInfo: {
+                        [slotIndex]: {
+                          type: formItemType,
+                          quantity: parseInt(formItemQuantity)
+                        }
+                      }
+                    }
+                  }
+                }
+
+                mqttRef.current?.publish('shelf/data', JSON.stringify(payload), { qos: 1 }, (err) => {
+                  if (err) {
+                    console.error("Failed to publish item update:", err)
+                  } else {
+                    console.log("Item info update published:", payload)
+                  }
+                })
+              }}
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              Submit
+            </Button>
+          </div>
         </div>
       </div>
     </div>
