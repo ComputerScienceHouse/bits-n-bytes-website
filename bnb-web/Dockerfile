@@ -1,43 +1,39 @@
-# Stage 1: Build the Next.js app
+# Use an official Node.js runtime as the base image
 FROM node:23-alpine as build
 
 # Install Python and build tools for native modules
 RUN apk add --no-cache python3 make g++ linux-headers libusb-dev eudev-dev \
   && ln -sf python3 /usr/bin/python
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy dependency files and install
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy rest of the app
+# Copy the rest of the application code
 COPY . .
 
 # Build the Next.js app
 RUN npm run build
 
-# Stage 2: Production
+# Use a lightweight Node.js image for production
 FROM node:23-alpine as production
 
-# Install runtime dependencies for python scripts (if needed)
-RUN apk add --no-cache python3 libusb-dev eudev-dev \
-  && ln -sf python3 /usr/bin/python
-
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy built assets and necessary files
+# Copy only the necessary files from the build stage
 COPY --from=build /app/package*.json ./
-COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
-COPY --from=build /app/server.js ./server.js
-COPY --from=build /app/scripts ./scripts
+COPY --from=build /app/node_modules ./node_modules
 
-# Expose whatever port your Express app uses
+# Expose port 3000 (default for Next.js)
 EXPOSE 3000
 
-# Start the app using your custom Express server
-CMD ["node", "server.js"]
+# Start the Next.js server
+CMD ["npm", "start"]
