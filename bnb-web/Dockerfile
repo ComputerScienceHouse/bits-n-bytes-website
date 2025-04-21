@@ -23,6 +23,9 @@ RUN npm run build
 # Use a lightweight Node.js image for production
 FROM node:23-alpine as production
 
+RUN apk add --no-cache python3 make g++ linux-headers libusb-dev eudev-dev \
+  && ln -sf python3 /usr/bin/python
+
 # Set the working directory
 WORKDIR /app
 
