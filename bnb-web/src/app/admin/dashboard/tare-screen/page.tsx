@@ -181,20 +181,7 @@ export default function TareScreen() {
           <h2 className="text-2xl font-semibold mb-4 text-center">Update Shelf Info</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <Label>Shelf Letter</Label>
-              <Select onValueChange={setFormShelfLetter} defaultValue={formShelfLetter}>
-                <SelectTrigger>
-                  <SelectValue className="text-grey" placeholder="Select letter" />
-                </SelectTrigger>
-                <SelectContent>
-                  {['A', 'B', 'C', 'D'].map(letter => (
-                    <SelectItem key={letter} value={letter} className="text-grey">{letter}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Slot Number</Label>
+              <Label>Shelf</Label>
               <Select onValueChange={setFormShelfNumber} defaultValue={formShelfNumber}>
                 <SelectTrigger>
                   <SelectValue className="text-grey" placeholder="Select number" />
@@ -202,6 +189,19 @@ export default function TareScreen() {
                 <SelectContent>
                   {[0, 1, 2, 3].map(num => (
                     <SelectItem key={num} value={num.toString()} className="text-grey">{num}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Slot</Label>
+              <Select onValueChange={setFormShelfLetter} defaultValue={formShelfLetter}>
+                <SelectTrigger>
+                  <SelectValue className="text-grey" placeholder="Select letter" />
+                </SelectTrigger>
+                <SelectContent>
+                  {['A', 'B', 'C', 'D'].map(letter => (
+                    <SelectItem key={letter} value={letter} className="text-grey">{letter}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
