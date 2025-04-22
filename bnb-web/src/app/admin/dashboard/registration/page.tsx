@@ -53,11 +53,11 @@ export default function RegistrationPage() {
       // console.log('Form Data:', formData)
 
       // TODO: redo this
-      const url = `https://bitsnbytes-api-bitsnbytes-api.apps.okd4.csh.rit.edu/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc-token=${formData.nfcToken}`;
+      const url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc-token=${formData.nfcToken}`;
       console.log('env_token', process.env.API_AUTH)
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': process.env.API_AUTH || "" },
+        headers: { 'Content-Type': 'application/json', 'Authorization': process.env.NEXT_PUBLIC_API_AUTH || "" },
       })
 
       if (response.ok) {

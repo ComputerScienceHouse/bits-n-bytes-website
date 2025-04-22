@@ -9,7 +9,7 @@ export async function GET(): Promise<Response> {
   const scriptPath = path.resolve(process.cwd(), "src/app/scripts/scan_nfc.py");
 
   try {
-    const { stdout } = await execAsync(`python3 ${scriptPath}`);
+    const { stdout } = await execAsync(`python ${scriptPath}`);
     return NextResponse.json({ uid: stdout.trim() });
   } catch (error: unknown) {
     if (error instanceof Error) {
