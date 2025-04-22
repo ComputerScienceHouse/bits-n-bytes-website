@@ -35,22 +35,41 @@ export default function TareScreen() {
   const mqttRef = useRef<MqttClient | null>(null)
 
   useEffect(() => {
-    const mqttClient = connectMQTT()
-    mqttRef.current = mqttClient
+    console.log('TareScreen mounted');
+    console.log('Attempting to connect to MQTT...');
+    const mqttClient = connectMQTT();
+    mqttRef.current = mqttClient;
+    console.log('MQTT Client instance:', mqttClient);
 
-    mqttClient.subscribe('shelf/data')
+    mqttClient.on('connect', () => {
+      console.log('Successfully connected to MQTT broker (from TareScreen)!');
+      mqttClient.subscribe('shelf/data');
+    });
 
     mqttClient.on('message', (topic: string, message: Buffer) => {
       if (topic === 'shelf/data') {
-        const data = JSON.parse(message.toString())
-        console.log('Tare status received:', data)
+        const data = JSON.parse(message.toString());
+        console.log('Tare status received:', data);
       }
-    })
+    });
+
+    mqttClient.on('error', (err) => {
+      console.error('MQTT connection error (from TareScreen):', err);
+    });
+
+    mqttClient.on('disconnect', () => {
+      console.log('Disconnected from MQTT broker (from TareScreen).');
+    });
+
+    mqttClient.on('reconnect', () => {
+      console.log('Attempting to reconnect to MQTT broker (from TareScreen)...');
+    });
 
     return () => {
-      mqttClient.end()
-    }
-  }, [])
+      console.log('Unmounting TareScreen, ending MQTT client.');
+      mqttClient.end();
+    };
+  }, []);
 
   const cycleState = async (index: number) => {
     const shelfNumber = Math.floor(index / 4)
