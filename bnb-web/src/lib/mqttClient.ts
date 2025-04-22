@@ -1,6 +1,6 @@
 import mqtt from 'mqtt'
 
-const BROKER_URL = 'ws://test.mosquitto.org:8080' 
+const BROKER_URL = 'mqtt://mqtt.csh.rit.edu:8080'
 
 let client: mqtt.MqttClient | null = null
 

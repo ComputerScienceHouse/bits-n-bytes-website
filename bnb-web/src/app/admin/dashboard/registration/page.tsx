@@ -125,7 +125,7 @@ export default function RegistrationPage() {
 
             <div className="space-y-2">
               <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" name="phone" type="tel" placeholder="Enter phone number" value={formData.phone} onChange={handleChange} required />
+              <Input id="phone" name="phone" type="tel" placeholder="Enter phone number" value={formData.phone} onChange={handleChange} />
             </div>
 
             <div className="space-y-2">
