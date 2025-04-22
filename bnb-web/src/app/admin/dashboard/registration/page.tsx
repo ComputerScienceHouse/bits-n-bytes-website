@@ -53,7 +53,7 @@ export default function RegistrationPage() {
       // console.log('Form Data:', formData)
 
       // TODO: redo this
-      const url = `http://localhost:8080/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc-token=${formData.nfcToken}`;
+      const url = `https://bitsnbytes-api-bitsnbytes-api.apps.okd4.csh.rit.edu/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc-token=${formData.nfcToken}`;
       
       const response = await fetch(url, {
         method: 'POST',
