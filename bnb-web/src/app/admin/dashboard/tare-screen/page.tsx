@@ -43,11 +43,11 @@ export default function TareScreen() {
 
     mqttClient.on('connect', () => {
       console.log('Successfully connected to MQTT broker (from TareScreen)!');
-      mqttClient.subscribe('shelf/data');
+      mqttClient.subscribe('shelf/tare');
     });
 
     mqttClient.on('message', (topic: string, message: Buffer) => {
-      if (topic === 'shelf/data') {
+      if (topic === 'shelf/tare') {
         const data = JSON.parse(message.toString());
         console.log('Tare status received:', data);
       }
@@ -83,6 +83,7 @@ export default function TareScreen() {
     })
 
     const payload = {
+      calibrationWeight: 100,
       shelves: {
         [mac]: {
           slots: [slotIndex]
@@ -90,7 +91,7 @@ export default function TareScreen() {
       }
     }
 
-    mqttRef.current?.publish('shelf/data', JSON.stringify(payload), { qos: 1 }, (err) => {
+    mqttRef.current?.publish('shelf/tare', JSON.stringify(payload), { qos: 1 }, (err) => {
       if (!err) {
         setButtonStates(prevStates => {
           const newStates = [...prevStates]
@@ -105,8 +106,8 @@ export default function TareScreen() {
 
   const getMacForShelf = (shelfNumber: number): string => {
     const shelfMacMap: Record<number, string> = {
-      0: "80:65:99:49:EF:8E",
-      1: "80:65:99:E3:EF:50",
+      0: "80:65:99:E3:EF:50",
+      1: "80:65:99:49:EF:8E",
       2: "80:65:99:E3:8B:92",
       3: "MAC_1"
     }
@@ -173,7 +174,7 @@ export default function TareScreen() {
       )
     }
 
-    mqttRef.current?.publish('shelf/data', JSON.stringify(payload), { qos: 1 })
+    mqttRef.current?.publish('shelf/tare', JSON.stringify(payload), { qos: 1 })
   }
 
   return (
@@ -263,7 +264,7 @@ export default function TareScreen() {
                   }
                 }
 
-                mqttRef.current?.publish('shelf/data', JSON.stringify(payload), { qos: 1 }, (err) => {
+                mqttRef.current?.publish('shelf/set/item', JSON.stringify(payload), { qos: 1 }, (err) => {
                   if (err) {
                     console.error("Failed to publish item update:", err)
                   } else {
