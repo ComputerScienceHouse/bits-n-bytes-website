@@ -127,11 +127,13 @@ export default function TareScreen() {
 
   const renderShelf = (shelfNumber: number, startIndex: number) => {
     const positions = ['A', 'B', 'C', 'D']
-
+  
     return (
       <Card className="p-4">
         <CardHeader className="p-2">
-          <CardTitle className="text-xl text-center">Shelf {shelfNumber}</CardTitle>
+          <CardTitle className="text-xl text-center">
+            {getMacForShelf(shelfNumber)}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4 justify-center">
@@ -152,6 +154,7 @@ export default function TareScreen() {
       </Card>
     )
   }
+  
 
   const resetButtons = () => setButtonStates(Array(16).fill('neutral'))
 
