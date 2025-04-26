@@ -9,20 +9,19 @@ import { useState, useEffect, useRef } from "react"
 import { connectMQTT } from "@/lib/mqttClient"
 import type { MqttClient } from 'mqtt'
 
-const ITEM_OPTIONS = [
-  'Sour Patch Kids', 
-  'Skittles Gummies',
-  'Little Bites Chocolate',
-  'Little Bites Party',
-  'Little Bites Blueberry', 
-  'Swedish Fish Mini Tropical',
-  'Swedish Fish Original',
-  'Welch\'s Fruit Snacks',
-  'Brownie Brittle Chocolate Chip', 
-  '12 Pack Wild Cherry Pepsi', 
-  '12 Pack Loganberry',
-  'Wild Cherry Pepsi Can',
-  'EMPTY']
+
+
+  const ITEM_ID_MAP: Record<string, number> = {
+    'Sour Patch Kids': 2,
+    'Little Bites': 4,
+    'Brownie Brittle Chocolate Chip': 3,
+    '12 Pack Wild Cherry Pepsi': 5,
+    'EMPTY': -1
+  }
+
+  const ITEM_OPTIONS = Object.keys(ITEM_ID_MAP)
+
+  
 
 type ButtonState = 'neutral' | 'yellow' | 'green'
 
@@ -252,6 +251,7 @@ export default function TareScreen() {
               onClick={() => {
                 const shelfIndex = parseInt(formShelfNumber)
                 const slotIndex = ['A', 'B', 'C', 'D'].indexOf(formShelfLetter)
+                console.log("Shelf Index:", shelfIndex)
                 const mac = getMacForShelf(shelfIndex)
 
                 const payload = {
@@ -259,7 +259,7 @@ export default function TareScreen() {
                     [mac]: {
                       slotInfo: {
                         [slotIndex]: {
-                          type: formItemType,
+                          itemId: ITEM_ID_MAP[formItemType],
                           quantity: parseInt(formItemQuantity)
                         }
                       }
