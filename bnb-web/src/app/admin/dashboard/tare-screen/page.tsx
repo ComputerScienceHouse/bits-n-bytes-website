@@ -16,6 +16,9 @@ import type { MqttClient } from 'mqtt'
     'Little Bites': 4,
     'Brownie Brittle Chocolate Chip': 3,
     '12 Pack Wild Cherry Pepsi': 5,
+    'Livesaver Gummies': 6,
+    'Swedish Fish': 7,
+    'Mike & Ike': 8,
     'EMPTY': -1
   }
 
