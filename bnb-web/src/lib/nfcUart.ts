@@ -19,6 +19,8 @@ export default function readNFC(): Promise<number> {
     let port: SerialPort | undefined;
     let timeoutId: NodeJS.Timeout | undefined;
 
+    console.log("begin nfc")
+
     try {
       port = new SerialPort({ 
         path: portPath, 
@@ -29,6 +31,8 @@ export default function readNFC(): Promise<number> {
         const error = e instanceof Error ? e.message : 'Unknown error during SerialPort instantiation.';
         return reject(new Error(`Failed to instantiate SerialPort: ${error}`));
     }
+
+    console.log('serial started')
 
     let receiveBuffer: Buffer = Buffer.alloc(0);
 
@@ -89,7 +93,8 @@ export default function readNFC(): Promise<number> {
         receiveBuffer = receiveBuffer.subarray(PAYLOAD_SIZE);
 
         // Read the 4-byte counter (Big Endian)
-        const counter: number = packet.readUInt32BE(3);
+        const counter: number = packet.readUInt32BE(0);
+        console.log(`Encoded Buffer: ${packet}`)
         console.log(`Decoded Counter: ${counter}`);
 
         // Resolve the promise and close the port after reading the first packet
