@@ -1,7 +1,7 @@
 import { SerialPort } from 'serialport';
 import { Buffer } from 'buffer';
 
-const portPath: string = '\\\\.\\COM5'; // COM port for the connected device
+const portPath: string = process.env.NEXT_PUBLIC_NFC_SERIAL_PORT || '/dev/ttyS0'; // COM port for the connected device
 const baudRate: number = 9600;
 const PAYLOAD_SIZE: number = 7;
 const TIMEOUT_MS: number = 5000; // 5-second timeout for read operation
