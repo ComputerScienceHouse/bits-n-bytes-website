@@ -94,7 +94,6 @@ export default function readNFC(): Promise<number> {
 
         // Read the 4-byte counter (Big Endian)
         const counter: number = packet.readUInt32BE(0);
-        console.log(`Encoded Buffer: ${packet}`)
         console.log(`Decoded Counter: ${counter}`);
 
         // Resolve the promise and close the port after reading the first packet
