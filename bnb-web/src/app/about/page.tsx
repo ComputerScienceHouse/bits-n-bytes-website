@@ -3,7 +3,7 @@ import MemberCard from "@/components/ui/member-card";
 
 export default function AboutPage() {
     return (
-        <section className="m-8">
+        <section className="mt-8 ml-[15%] mr-[15%] mb-16">
 
             <h1 className="text-center text-4xl m-8"> About </h1>
 

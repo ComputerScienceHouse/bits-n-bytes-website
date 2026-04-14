@@ -20,7 +20,7 @@
     --secondary-foreground: 0 0% 98%;
  
     --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted-foreground: 4, 0%, 91%;
  
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
@@ -72,6 +72,7 @@
 .aboutPageSection {
   background: #E8DDE7;
   margin: 1%;
+  margin-bottom: 2em;
   padding: 1em 2em;
   color: black;
   border-radius: 1em;

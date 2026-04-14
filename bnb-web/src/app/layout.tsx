@@ -31,9 +31,9 @@ export default function RootLayout({
           <div className="flex items-center justify-between h-16 px-4 max-w-7xl mx-auto">
             {/* Home Button */}
             <Link href="/">
-              <Button variant="ghost" size="icon" className="hover:bg-primary/10">
+              <Button variant="ghost" className="hover:bg-primary/10">
                 {/* <Home className="h-5 w-5" /> */}
-                <span>Home</span>
+                <span>Bits &apos;n Bytes</span>
               </Button>
             </Link>
 
@@ -41,7 +41,7 @@ export default function RootLayout({
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link href={"/contact"} className={navigationMenuTriggerStyle()}>Contact</Link>
+                  <Link href={"/"} className={navigationMenuTriggerStyle()}>Home</Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link href={"/about"} className={navigationMenuTriggerStyle()}>About</Link>
@@ -49,9 +49,12 @@ export default function RootLayout({
                 <NavigationMenuItem>
                   <Link href={"/admin"} className={navigationMenuTriggerStyle()}>Admin</Link>
                 </NavigationMenuItem>
-                <NavigationMenuItem>
+                {/* <NavigationMenuItem>
                     <Link href={"/funding"} className={navigationMenuTriggerStyle()}>Funding</Link>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
+                {/* <NavigationMenuItem>
+                  <Link href={"/contact"} className={navigationMenuTriggerStyle()}>Contact</Link>
+                </NavigationMenuItem> */}
               </NavigationMenuList>
             </NavigationMenu>
           </div>

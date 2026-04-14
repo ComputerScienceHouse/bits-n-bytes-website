@@ -99,7 +99,7 @@ export default function RegistrationPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/50">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-black">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-2">
             <div className="p-3 rounded-full bg-primary/10">
@@ -132,9 +132,6 @@ export default function RegistrationPage() {
               <Label htmlFor="nfcToken">NFC Token Number</Label>
               <div className="flex space-x-2">
                 <Input className="border-red-600 border-4 focus:border-black" id="nfcToken" name="nfcToken" placeholder="Tap card to scan (select this box first)" value={formData.nfcToken} onChange={handleChange} required />
-                <Button type="button" onClick={handleNfcScan} disabled={nfcLoading}>
-                  {nfcLoading ? 'Scanning...' : <RadioTower />}
-                </Button>
               </div>
             </div>
 

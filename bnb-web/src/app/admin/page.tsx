@@ -38,13 +38,6 @@ export default function AdminPage() {
               Registration
             </Button>
           </Link>
-          
-          <Link href="/tare-screen">
-            <Button className="w-full h-16 text-lg" variant="outline">
-              <Scale className="mr-2 h-5 w-5" />
-              Tare Screen
-            </Button>
-          </Link>
         </CardContent>
       </Card>
     </div>

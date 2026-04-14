@@ -48,21 +48,21 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Admin Login</h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Admin Login</h1>
+          <p className="mt-2 text-sm text-gray-50">
             Enter your credentials to access the admin dashboard
           </p>
         </div>
         
-        <Card className="w-full">
+        <Card className="w-full text-purple-600">
           <form onSubmit={handleSubmit}>
             <CardHeader className="space-y-1">
               <div className="w-full h-12 flex justify-center">
-                <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground text-xl font-bold">A</span>
+                <div className="w-12 h-12 rounded-full bg-purple-800 flex items-center justify-center">
+                  <span className="text-white text-xl font-bold">A</span>
                 </div>
               </div>
             </CardHeader>
@@ -78,6 +78,7 @@ export default function AdminLoginPage() {
                 <Input 
                   id="username" 
                   type="text" 
+                  className="border-purple-800"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
@@ -88,13 +89,14 @@ export default function AdminLoginPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <Button variant="link" className="p-0 h-auto text-xs" type="button">
+                  <Button variant="link" className="p-0 h-auto text-xs text-purple-600" type="button">
                     Forgot password?
                   </Button>
                 </div>
                 <Input 
                   id="password" 
                   type="password" 
+                  className="border-purple-800"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
@@ -106,7 +108,7 @@ export default function AdminLoginPage() {
             <CardFooter>
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full bg-purple-600 text-white" 
                 disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Login"}
