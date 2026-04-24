@@ -26,7 +26,8 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full overflow-y-auto snap-y snap-mandatory">
       {/* Hero Section */}
-      <section className="min-h-screen w-full snap-start bg-gradient-to-b from-background to-background/50 flex flex-col items-center justify-center relative px-4">
+      {/* <section className="min-h-screen w-full snap-start bg-gradient-to-b from-background to-background/50 flex flex-col items-center justify-center relative px-4"> */}
+      <section className="min-h-screen w-full snap-start flex flex-col items-center justify-center relative px-4">
         <div className="space-y-6 text-center max-w-4xl mx-auto">
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-white animate-in fade-in slide-in-from-bottom-8 duration-1000">
             Bits &apos;N Bytes
@@ -62,7 +63,8 @@ export default function Home() {
       {/* Features Section */}
       <section
         ref={featuresRef}
-        className="min-h-screen w-full snap-start bg-gradient-to-b from-background/50 to-background flex items-center justify-center px-4"
+        // className="min-h-screen w-full snap-start bg-gradient-to-b from-background/75 to-background flex items-center justify-center px-4"
+        className="min-h-screen w-full snap-start flex items-center justify-center px-4"
       >
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12">Innovative Features</h2>
@@ -103,7 +105,8 @@ export default function Home() {
       </section>
 
       {/* Future Vision Section */}
-      <section className="min-h-screen w-full snap-start bg-gradient-to-b from-background to-background/50 flex items-center justify-center px-4">
+      <section className="min-h-screen w-full snap-start flex items-center justify-center px-4">
+      {/* <section className="min-h-screen w-full snap-start bg-gradient-to-b from-background to-background/75 flex items-center justify-center px-4"> */}
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">The Future of Vending</h2>
           <p className="text-xl text-muted-foreground leading-relaxed">

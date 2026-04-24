@@ -61,7 +61,7 @@ export default function RootLayout({
         </header>
 
         {/* Main Content with padding for header */}
-        <main className="pt-16">
+        <main className="bg-gradient-to-b from-background/50 to-background/50">
           {children}
         </main>
       </body>

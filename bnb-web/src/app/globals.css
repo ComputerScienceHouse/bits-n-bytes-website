@@ -57,6 +57,11 @@
   }
 }
 
+body {
+  background-image: url("/BnBPurpleLogo.svg");
+  background-size: 90px 90px;
+}
+
 /* Used for team's profile pictures */
 .profile-pic {
   width: 150px;
