@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { UserPlus, Scale } from 'lucide-react'
+import { UserPlus, Package } from 'lucide-react'
 import Link from "next/link"
 
 export default function AdminPage() {
@@ -18,7 +18,12 @@ export default function AdminPage() {
               Registration
             </Button>
           </Link>
-          
+          <Link href="/admin/inventory">
+            <Button className="w-full h-16 text-lg" variant="outline">
+              <Package className="mr-2 h-5 w-5" />
+              Inventory Management
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

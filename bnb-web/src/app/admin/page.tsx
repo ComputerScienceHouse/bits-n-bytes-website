@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { UserPlus, Scale } from 'lucide-react'
+import { UserPlus, Scale, Package } from 'lucide-react'
 import Link from "next/link"
 import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from 'next/navigation'
@@ -10,18 +10,19 @@ import { useEffect } from 'react'
 
 export default function AdminPage() {
   const router = useRouter();
-  const { isAuthenticated, isAdmin } = useAuth(router);
+  const { isAuthenticated, isAdmin, isLoading } = useAuth(router);
 
   useEffect(() => {
+    if (isLoading) return;
     if (!isAuthenticated) {
       router.push('/login');
     } else if (!isAdmin) {
       router.push('/');
     }
-  }, [isAuthenticated, isAdmin, router]);
+  }, [isAuthenticated, isAdmin, isLoading, router]);
 
-  if (!isAuthenticated || !isAdmin) {
-    return null; // or a loading spinner
+  if (isLoading || !isAuthenticated || !isAdmin) {
+    return null;
   }
 
   return (
@@ -36,6 +37,12 @@ export default function AdminPage() {
             <Button className="w-full h-16 text-lg" variant="outline">
               <UserPlus className="mr-2 h-5 w-5" />
               Registration
+            </Button>
+          </Link>
+          <Link href="/admin/inventory">
+            <Button className="w-full h-16 text-lg" variant="outline">
+              <Package className="mr-2 h-5 w-5" />
+              Inventory Management
             </Button>
           </Link>
         </CardContent>
