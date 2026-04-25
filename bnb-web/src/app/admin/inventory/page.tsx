@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Package, Plus, Trash2, RefreshCw } from "lucide-react"
+import { Package, Plus, Trash2, RefreshCw, X, AlertCircle, ChevronRight } from "lucide-react"
 
 const SLOTS_PER_SHELF = 4
 
@@ -72,7 +72,6 @@ export default function InventoryPage() {
       }
 
       setShelves(prev => {
-        // keep pending shelves that haven't been saved yet
         const merged: Record<string, ShelfContents> = { ...newShelves }
         setPendingShelves(pending => {
           for (const pid of pending) {
@@ -141,7 +140,6 @@ export default function InventoryPage() {
       })
       if (!res.ok) throw new Error()
       setAddState(prev => ({ ...prev, [key]: { itemId: '', quantity: '1' } }))
-      // shelf is now persisted — remove from pending
       setPendingShelves(prev => { const s = new Set(prev); s.delete(shelfId); return s })
       await fetchShelf(shelfId)
     } catch {
@@ -169,62 +167,111 @@ export default function InventoryPage() {
     }
   }
 
+  const totalItems = shelfIds.reduce((acc, sid) => {
+    const shelf = shelves[sid]
+    if (!shelf) return acc
+    return acc + Object.values(shelf).reduce((s, items) => s + items.length, 0)
+  }, 0)
+
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-b from-background to-background/50">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Package className="h-7 w-7" />
-            <h1 className="text-3xl font-bold">Inventory Management</h1>
+    <div className="min-h-screen pt-20 pb-10 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto space-y-6">
+
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="p-2 rounded-lg bg-purple-500/20 border border-purple-500/30">
+                <Package className="h-5 w-5 text-purple-300" />
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Inventory</h1>
+            </div>
+            <p className="text-sm text-muted-foreground pl-1">
+              {shelfIds.length} shelf{shelfIds.length !== 1 ? 'ves' : ''} &middot; {totalItems} item slot{totalItems !== 1 ? 's' : ''} filled
+            </p>
           </div>
-          <Button variant="outline" onClick={() => { fetchItems(); fetchAllShelves() }} disabled={loadingAll}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${loadingAll ? 'animate-spin' : ''}`} />
+          <Button
+            variant="outline"
+            onClick={() => { fetchItems(); fetchAllShelves() }}
+            disabled={loadingAll}
+            className="self-start sm:self-auto gap-2 border-white/20 hover:border-white/40"
+          >
+            <RefreshCw className={`h-4 w-4 ${loadingAll ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
         </div>
 
+        {/* Error Banner */}
         {error && (
-          <div className="mb-4 p-3 bg-red-900/20 border border-red-600 rounded-md text-red-400 text-sm flex justify-between items-center">
-            <span>{error}</span>
-            <button className="underline ml-4" onClick={() => setError(null)}>dismiss</button>
+          <div className="flex items-start gap-3 p-4 bg-red-950/40 border border-red-500/40 rounded-xl text-sm text-red-300">
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+            <span className="flex-1">{error}</span>
+            <button
+              className="shrink-0 hover:text-red-200 transition-colors"
+              onClick={() => setError(null)}
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         )}
 
+        {/* Empty state */}
         {shelfIds.length === 0 && !loadingAll && (
-          <div className="text-center text-muted-foreground py-16">
-            No shelves found. Add a shelf by ID below to get started.
+          <div className="text-center py-20 text-muted-foreground">
+            <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
+            <p className="font-medium">No shelves yet</p>
+            <p className="text-sm mt-1">Add a shelf ID below to get started</p>
           </div>
         )}
 
-        <div className="border-2 border-foreground/30 rounded-lg overflow-hidden bg-black/30">
+        {/* Loading state */}
+        {loadingAll && shelfIds.length === 0 && (
+          <div className="text-center py-20 text-muted-foreground">
+            <RefreshCw className="h-8 w-8 mx-auto mb-4 opacity-50 animate-spin" />
+            <p className="text-sm">Loading shelves...</p>
+          </div>
+        )}
+
+        {/* Shelves */}
+        <div className="space-y-4">
           {shelfIds.map(shelfId => {
             const shelfData = shelves[shelfId]
             const isLoading = loadingShelf[shelfId]
             const isPending = pendingShelves.has(shelfId)
 
             return (
-              <div key={shelfId}>
-                <div className="bg-foreground/10 px-4 py-2 flex items-center justify-between border-b border-foreground/20">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm">Shelf {shelfId}</span>
+              <div
+                key={shelfId}
+                className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden"
+              >
+                {/* Shelf Header */}
+                <div className="flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/10">
+                  <div className="flex items-center gap-2.5">
+                    <ChevronRight className="h-4 w-4 text-purple-400" />
+                    <span className="font-semibold text-sm sm:text-base">Shelf {shelfId}</span>
                     {isPending && (
-                      <span className="text-xs text-yellow-500/80 italic">unsaved — add an item to create</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/15 text-yellow-400 border border-yellow-500/25 font-medium">
+                        Unsaved
+                      </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    {isLoading && <span className="text-xs text-muted-foreground">Loading...</span>}
+                  <div className="flex items-center gap-3">
+                    {isLoading && (
+                      <RefreshCw className="h-3.5 w-3.5 text-muted-foreground animate-spin" />
+                    )}
                     {isPending && (
                       <button
-                        className="text-xs text-red-400 hover:underline"
+                        className="text-xs text-red-400 hover:text-red-300 transition-colors"
                         onClick={() => removePendingShelf(shelfId)}
                       >
-                        discard
+                        Discard
                       </button>
                     )}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 divide-x divide-foreground/20">
+                {/* Slots Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/10">
                   {Array.from({ length: SLOTS_PER_SHELF }, (_, j) => {
                     const slotId = j
                     const slotItems = shelfData?.[slotId] ?? []
@@ -232,34 +279,48 @@ export default function InventoryPage() {
                     const addCurrent = addState[addKey] ?? { itemId: '', quantity: '1' }
 
                     return (
-                      <div key={slotId} className="p-3 flex flex-col gap-2 min-h-[180px]">
-                        <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">
-                          Slot {slotId}
+                      <div key={slotId} className="bg-black/30 p-4 flex flex-col gap-3">
+                        {/* Slot label */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold uppercase tracking-wider text-purple-300/70">
+                            Slot {slotId}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {slotItems.length} item{slotItems.length !== 1 ? 's' : ''}
+                          </span>
                         </div>
 
-                        <div className="flex-1 space-y-1">
+                        {/* Items list */}
+                        <div className="flex-1 space-y-2 min-h-[60px]">
                           {slotItems.length === 0 ? (
-                            <div className="text-xs text-muted-foreground italic">Empty</div>
+                            <div className="flex items-center justify-center h-full min-h-[48px] rounded-lg border border-dashed border-white/10 text-xs text-muted-foreground">
+                              Empty
+                            </div>
                           ) : (
                             slotItems.map(item => {
                               const removeKey = `remove-${shelfId}-${slotId}-${item.id}`
                               return (
                                 <div
                                   key={item.shelf_content_id}
-                                  className="flex items-center justify-between gap-1 bg-foreground/5 border border-foreground/10 rounded px-2 py-1"
+                                  className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2 group"
                                 >
                                   <div className="flex-1 min-w-0">
-                                    <div className="text-xs font-medium truncate">{item.name}</div>
-                                    <div className="text-xs text-muted-foreground">qty: {item.quantity}</div>
+                                    <div className="text-sm font-medium truncate leading-tight">{item.name}</div>
+                                    <div className="text-xs text-muted-foreground mt-0.5">
+                                      Qty: <span className="text-foreground/80 font-medium">{item.quantity}</span>
+                                    </div>
                                   </div>
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/20 shrink-0"
+                                    className="h-8 w-8 p-0 text-red-400/60 hover:text-red-300 hover:bg-red-900/25 shrink-0 opacity-60 group-hover:opacity-100 transition-all"
                                     disabled={actionLoading[removeKey]}
                                     onClick={() => removeItemFromSlot(shelfId, slotId, item.id)}
                                   >
-                                    <Trash2 className="h-3 w-3" />
+                                    {actionLoading[removeKey]
+                                      ? <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                      : <Trash2 className="h-3.5 w-3.5" />
+                                    }
                                   </Button>
                                 </div>
                               )
@@ -267,7 +328,8 @@ export default function InventoryPage() {
                           )}
                         </div>
 
-                        <div className="space-y-1.5 pt-2 border-t border-foreground/10">
+                        {/* Add item form */}
+                        <div className="pt-3 border-t border-white/10 space-y-2">
                           <Select
                             value={addCurrent.itemId}
                             onValueChange={val =>
@@ -277,7 +339,7 @@ export default function InventoryPage() {
                               }))
                             }
                           >
-                            <SelectTrigger className="h-7 text-xs">
+                            <SelectTrigger className="h-9 text-sm border-white/15 bg-white/5">
                               <SelectValue placeholder="Select item..." />
                             </SelectTrigger>
                             <SelectContent>
@@ -288,7 +350,7 @@ export default function InventoryPage() {
                               ))}
                             </SelectContent>
                           </Select>
-                          <div className="flex gap-1">
+                          <div className="flex gap-2">
                             <Input
                               type="number"
                               min={1}
@@ -299,17 +361,19 @@ export default function InventoryPage() {
                                   [addKey]: { ...addCurrent, quantity: e.target.value },
                                 }))
                               }
-                              className="h-7 text-xs w-16 shrink-0"
+                              className="h-9 text-sm w-20 shrink-0 border-white/15 bg-white/5"
                               placeholder="Qty"
                             />
                             <Button
                               size="sm"
-                              className="h-7 flex-1 text-xs"
+                              className="h-9 flex-1 text-sm bg-purple-600/80 hover:bg-purple-500/80 border-0"
                               disabled={!addCurrent.itemId || actionLoading[addKey]}
                               onClick={() => addItemToSlot(shelfId, slotId)}
                             >
-                              <Plus className="h-3 w-3 mr-1" />
-                              Add
+                              {actionLoading[addKey]
+                                ? <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                : <><Plus className="h-3.5 w-3.5 mr-1" />Add</>
+                              }
                             </Button>
                           </div>
                         </div>
@@ -317,27 +381,34 @@ export default function InventoryPage() {
                     )
                   })}
                 </div>
-
-                <div className="h-3 bg-foreground/15 border-t border-b border-foreground/20" />
               </div>
             )
           })}
         </div>
 
-        <div className="mt-4 flex items-center gap-3">
-          <Input
-            type="text"
-            placeholder="Shelf ID..."
-            value={newShelfInput}
-            onChange={e => setNewShelfInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && addShelf()}
-            className="w-36"
-          />
-          <Button variant="outline" onClick={addShelf} disabled={!newShelfInput.trim()}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Shelf
-          </Button>
+        {/* Add Shelf */}
+        <div className="rounded-2xl border border-dashed border-white/15 p-4 sm:p-5">
+          <p className="text-sm font-medium text-muted-foreground mb-3">Add a shelf</p>
+          <div className="flex gap-3">
+            <Input
+              type="text"
+              placeholder="Shelf ID..."
+              value={newShelfInput}
+              onChange={e => setNewShelfInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addShelf()}
+              className="h-10 max-w-[180px] border-white/15 bg-white/5"
+            />
+            <Button
+              onClick={addShelf}
+              disabled={!newShelfInput.trim()}
+              className="h-10 bg-purple-600/80 hover:bg-purple-500/80 border-0 gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Shelf
+            </Button>
+          </div>
         </div>
+
       </div>
     </div>
   )
