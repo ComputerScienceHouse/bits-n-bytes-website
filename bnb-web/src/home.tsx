@@ -36,7 +36,7 @@ export default function Home() {
           <Button
             variant="outline"
             size="lg"
-            className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300"
+            className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 bg-background"
             onClick={scrollToFeatures}
           >
             Learn More <ArrowDown className="ml-2 h-4 w-4" />

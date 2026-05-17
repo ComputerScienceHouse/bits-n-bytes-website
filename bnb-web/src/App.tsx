@@ -3,6 +3,8 @@ import { Button } from "../components/ui/button";
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem } from "@radix-ui/react-navigation-menu";
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
 import Home from "./home";
+import AboutPage from "./About";
+import AdminPage from "./Admin";
 
 export default function App() {
     return (
@@ -40,6 +42,8 @@ export default function App() {
         <main className="bg-gradient-to-b from-background/50 to-background/50">
           <Routes>
             <Route path="/" element={<Home/>}/>
+            <Route path="/about" element={<AboutPage/>}/>
+            <Route path="/admin" element={<AdminPage/>}/>
         </Routes>
         </main>
         </BrowserRouter>
