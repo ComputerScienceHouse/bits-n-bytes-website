@@ -4,7 +4,9 @@ import { NavigationMenu, NavigationMenuList, NavigationMenuItem } from "@radix-u
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
 import Home from "./home";
 import AboutPage from "./About";
-import AdminPage from "./Admin";
+import AdminPage from "./admin/Dashboard";
+import InventoryPage from "./admin/Inventory";
+import RegistrationPage from "./admin/Registration";
 
 export default function App() {
     return (
@@ -44,6 +46,8 @@ export default function App() {
             <Route path="/" element={<Home/>}/>
             <Route path="/about" element={<AboutPage/>}/>
             <Route path="/admin" element={<AdminPage/>}/>
+            <Route path="/admin/inventory" element={<InventoryPage/>}></Route>
+            <Route path="/admin/registration" element={<RegistrationPage/>}></Route>
         </Routes>
         </main>
         </BrowserRouter>

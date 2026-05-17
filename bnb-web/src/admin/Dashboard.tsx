@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
-import { Button } from "../components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { UserPlus, Package } from 'lucide-react'
 
 export default function AdminPage() {
@@ -12,7 +12,7 @@ export default function AdminPage() {
           <CardDescription>Select an administrative function</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Link to="/admin/dashboard/registration">
+          <Link to="/admin/registration">
             <Button className="w-full h-16 text-lg" variant="outline">
               <UserPlus className="mr-2 h-5 w-5" />
               Registration
