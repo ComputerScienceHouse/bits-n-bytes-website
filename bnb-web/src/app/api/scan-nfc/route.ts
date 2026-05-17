@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { exec } from "child_process";
 import path from "path";
 import { promisify } from "util";
-import readNFC from "@/lib/nfcUart";
+import readNFC from "../lib/nfcUart";
 
 
 const execAsync = promisify(exec);

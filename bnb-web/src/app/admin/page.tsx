@@ -1,10 +1,10 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "../../../components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card"
 import { UserPlus, Scale, Package } from 'lucide-react'
 import Link from "next/link"
-import { useAuth } from "@/hooks/useAuth"
+import { useAuth } from "../hooks/useAuth"
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 

@@ -3,14 +3,14 @@ import { Inter } from 'next/font/google'
 import "./globals.css"
 import Link from "next/link"
 import { Home } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
+} from "../../components/ui/navigation-menu"
 
 const inter = Inter({ subsets: ["latin"] })
 

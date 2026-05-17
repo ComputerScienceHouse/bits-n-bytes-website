@@ -1,4 +1,4 @@
-import MemberCard from "@/components/ui/member-card";
+import MemberCard from "../../../components/ui/member-card";
 
 
 export default function AboutPage() {
