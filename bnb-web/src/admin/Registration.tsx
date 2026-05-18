@@ -3,7 +3,7 @@ import { Button } from "../../components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { Input } from "../../components/ui/input"
 import { Label } from "../../components/ui/label"
-import { UserPlus, RadioTower } from "lucide-react"
+import { UserPlus } from "lucide-react"
 
 export default function RegistrationPage() {
   const [formData, setFormData] = useState({
@@ -13,7 +13,6 @@ export default function RegistrationPage() {
     nfcToken: ''
   })
   const [loading, setLoading] = useState(false)
-  const [nfcLoading, setNfcLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -48,28 +47,9 @@ export default function RegistrationPage() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleNfcScan = async () => {
-    setNfcLoading(true)
-
-    try {
-      const response = await fetch('/api/scan-nfc')
-      const data = await response.json()
-
-      if (data.uid) {
-        setFormData(prev => ({ ...prev, nfcToken: data.uid }))
-      } else {
-        console.error('NFC scan failed')
-      }
-    } catch (error) {
-      console.error('Error scanning NFC:', error)
-    }
-
-    setNfcLoading(false)
-  }
-
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/50">
-      <Card className="w-full max-w-md bg-black">
+      <Card className="w-full max-w-md bg-black my-auto">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-2">
             <div className="p-3 rounded-full bg-primary/10">
