@@ -1,7 +1,7 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-import { Button } from "../components/ui/button";
+import { Button } from "./components/ui/button";
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem } from "@radix-ui/react-navigation-menu";
-import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "./components/ui/navigation-menu";
 import Home from "./home";
 import AboutPage from "./About";
 import AdminPage from "./admin/Dashboard";

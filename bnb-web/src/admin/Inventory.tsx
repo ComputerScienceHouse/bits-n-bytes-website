@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
-import { Button } from "../../components/ui/button"
-import { Input } from "../../components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
+import { Button } from "../components/ui/button"
+import { Input } from "../components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Package, Plus, Trash2, RefreshCw, X, AlertCircle, ChevronRight } from "lucide-react"
 
 const SLOTS_PER_SHELF = 4

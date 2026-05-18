@@ -1,6 +1,6 @@
 import { ArrowDown, Brain, ShoppingBag, Zap } from "lucide-react"
-import { Button } from "../components/ui/button"
-import { Card } from "../components/ui/card"
+import { Button } from "./components/ui/button"
+import { Card } from "./components/ui/card"
 import { useRef } from "react"
 import { Carousel } from "@material-tailwind/react";
 
