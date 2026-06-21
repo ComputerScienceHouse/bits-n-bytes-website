@@ -1,6 +1,7 @@
 {
-  "name": "bits-n-bytes",
-  "private": true,
+  "name": "bits-n-bytes-website",
+  "version": "2.0.0",
+  "description": "Bits 'n Bytes Website",
   "type": "module",
   "scripts": {
     "dev": "vite",
