@@ -3,7 +3,7 @@ FROM docker.io/node:22 as node
 RUN npm i -g pnpm
 
 WORKDIR /app/
-COPY package.json /app/
+COPY package.json /app/ pnpm-workspace.yaml* pnpm-lock.yaml*
 
 RUN pnpm i
 
