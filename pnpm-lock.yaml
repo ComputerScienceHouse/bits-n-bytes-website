@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@axa-fr/react-oidc':
-        specifier: ^7.27.8
-        version: 7.27.15(react@19.2.7)
+        specifier: 7.27.12
+        version: 7.27.12(react@19.2.7)
       '@fontsource/ibm-plex-mono':
         specifier: ^5.2.7
         version: 5.2.7
@@ -222,14 +222,14 @@ importers:
 
 packages:
 
-  '@axa-fr/oidc-client-service-worker@7.27.15':
-    resolution: {integrity: sha512-u4OnJaKOcYF+12NFE9Nf7Mk7Vc6UcDxpBQq2UxYsdo1zN6ORDg2k4VM3lkbZw8TZQm7bCUQEtsfcvxgF23joMw==}
+  '@axa-fr/oidc-client-service-worker@7.27.12':
+    resolution: {integrity: sha512-IsWhONyqALoOHJ13hHRI/3vZIMsyRG8fsy2AGTk6w+4iXtemIklJH8eCzHDlySubjw7mqErRMhugA7x3UsmdNQ==}
 
-  '@axa-fr/oidc-client@7.27.15':
-    resolution: {integrity: sha512-9njM+TcLvA9DlJIk91fv8lAgopSJtu6A6/hYUwMeWEBH9Fx2tnjbvLtEhQDr+JoFMBuJl0rLxynPxY2ux5gPbQ==}
+  '@axa-fr/oidc-client@7.27.12':
+    resolution: {integrity: sha512-oAI08dUlm/ex1CuXZ4xAz+LQsBWXj5pYxcmvkQrlAx2HL11DXs87dt4/bbtBhK1o93EjnIwNjwRa8tln0Jyu/g==}
 
-  '@axa-fr/react-oidc@7.27.15':
-    resolution: {integrity: sha512-MDgF7I7Jn8OsijuFI6TPMLMGE9ulEHnHn6CpM2TvF6DugWuNw2B5h4kqdv1rOGrmD7jl9LmBCib/dvh29lxA5w==}
+  '@axa-fr/react-oidc@7.27.12':
+    resolution: {integrity: sha512-ooIQABhMGt9vXx+G6uOw20/bJKVQ57mLHYHky2n6OnjsMAy95owzBNGu8tOEX7lUjVlaEVifFjV3/3P5ajQ2cQ==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -2595,16 +2595,16 @@ packages:
 
 snapshots:
 
-  '@axa-fr/oidc-client-service-worker@7.27.15': {}
+  '@axa-fr/oidc-client-service-worker@7.27.12': {}
 
-  '@axa-fr/oidc-client@7.27.15':
+  '@axa-fr/oidc-client@7.27.12':
     dependencies:
-      '@axa-fr/oidc-client-service-worker': 7.27.15
+      '@axa-fr/oidc-client-service-worker': 7.27.12
 
-  '@axa-fr/react-oidc@7.27.15(react@19.2.7)':
+  '@axa-fr/react-oidc@7.27.12(react@19.2.7)':
     dependencies:
-      '@axa-fr/oidc-client': 7.27.15
-      '@axa-fr/oidc-client-service-worker': 7.27.15
+      '@axa-fr/oidc-client': 7.27.12
+      '@axa-fr/oidc-client-service-worker': 7.27.12
       react: 19.2.7
 
   '@babel/code-frame@7.29.7':

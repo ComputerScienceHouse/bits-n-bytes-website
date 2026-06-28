@@ -5,8 +5,10 @@ import img2 from "../assets/hero-2.jpg";
 import img3 from "../assets/hero-3.jpg";
 import img4 from "../assets/hero-4.jpg";
 import img5 from "../assets/hero-5.png";
+import video from "../assets/video.mp4";
 import CSHLogo from "../assets/csh_logo_square.svg";
 import { useLayoutEffect, useRef } from "react";
+import VideoSection from "@/components/VideoPlayer";
 
 const heroImages = [
   { src: img1, alt: "Bits 'n Bytes Machine Front" },
@@ -156,7 +158,8 @@ export default function Home() {
             // how it works
           </p>
           <h2 className="mt-2 text-3xl md:text-4xl">Simplify the student experience.</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="grid gap-12 md:grid-cols-2">
+          <div className="mt-10 grid gap-6 md:grid-cols-1">
             {[
               {
                 n: "01",
@@ -176,6 +179,10 @@ export default function Home() {
                 <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
               </div>
             ))}
+          </div>
+          <div>
+            <VideoSection />
+          </div>
           </div>
         </div>
       </section>

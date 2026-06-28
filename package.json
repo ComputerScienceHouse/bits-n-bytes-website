@@ -12,7 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@axa-fr/react-oidc": "^7.27.8",
+    "@axa-fr/react-oidc": "7.27.12",
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/roboto": "^5.2.10",
     "@hookform/resolvers": "^5.2.2",

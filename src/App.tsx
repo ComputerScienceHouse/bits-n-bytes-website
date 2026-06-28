@@ -36,7 +36,7 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-8 text-sm flex flex-wrap items-center justify-between gap-2">
         <p>© {new Date().getFullYear()} Bits 'n Bytes @ Computer Science House</p>
         <p className="font-display text-xs uppercase tracking-widest text-accent">
-          made with curiosity
+          doing more at 2am than anyone else.
         </p>
       </div>
     </footer>
