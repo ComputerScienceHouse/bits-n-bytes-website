@@ -18,9 +18,9 @@ const heroImages = [
 ];
 
 const events = [
-  { name: "Imagine RIT", year: "2023 - 2026", city: "Rochester, NY" },
+  { name: "Open Sauce!", year: "Up Next! 2026", city: "San Francisco, CA" },
   { name: "Rochester Makerfaire", year: "2024 - 2026", city: "Rochester, NY" },
-  { name: "Open Sauce!", year: "2026", city: "San Francisco, CA" },
+  { name: "Imagine RIT", year: "2023 - 2026", city: "Rochester, NY" },
 ];
 
 export default function Home() {
@@ -202,7 +202,7 @@ export default function Home() {
             {events.map((e) => (
               <li
                 key={e.name}
-                className="snap-start shrink-0 w-64 rounded-lg border bg-card p-5 transition hover:-translate-y-1 hover:border-accent"
+                className="mx-auto sm:mx-0 my-5 sm:my-0 first:border-accent first:border-4 first:scale-110 snap-start shrink-0 w-64 rounded-lg border bg-card p-5 transition hover:-translate-y-1 hover:border-accent"
               >
                 <div className="font-display text-xs uppercase tracking-widest text-orange">
                   {e.year}
