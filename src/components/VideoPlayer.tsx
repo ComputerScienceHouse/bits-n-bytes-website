@@ -18,6 +18,7 @@ export default function VideoSection() {
           // catch if video isn't loaded yet
           vid.play().catch(() => {});
         } else {
+          container.style.filter = 'blur(40px);';
           vid.pause();
         }
       },
@@ -49,7 +50,7 @@ export default function VideoSection() {
   };
 
   return (
-    <div ref={containerRef} className="mt-10 ml-36 w-80">
+    <div ref={containerRef} className="mt-10 mx-auto md:ml-36 w-80">
       <video
         ref={videoRef}
         className="w-80 rounded-lg border overflow-hidden"

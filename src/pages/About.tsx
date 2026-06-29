@@ -6,61 +6,61 @@ import MemberCard from "@/components/ui/member-card";
 import image_default from "@/assets/BnBLogo.svg";
 
 // update every semester (hopefully)
-const academicYear = 2026;
+const academicYear = 2027;
 
 const currentTeam = [
   {
     name: "Akash Keshav",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/ak',
     role: "Director, Spring 2026",
     joinedRIT: 2024,
     major: "Software Engineering",
   },
   {
     name: "Sahil Patel",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/itsahill',
     role: "Director, Fall 2026",
     joinedRIT: 2022,
     major: "Computer Science",
   },
   {
     name: "Isaac Ingram",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/isaac',
     role: "Director, 2025",
     joinedRIT: 2022,
     major: "Computer Science",
   },
   {
     name: "Maelyn VonStettina-May",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/mayz',
     role: "NFC Lead",
     joinedRIT: 2025,
     major: "Cybersecurity",
   },
   {
     name: "Nikolai Strong",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/gravy',
     role: "Hardware Lead",
     joinedRIT: 2025,
     major: "Computer Science",
   },
   {
     name: "Alex Carlisi",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/lilroo',
     role: "Hardware Lead",
     joinedRIT: 2025,
     major: "Computer Engineering",
   },
   {
     name: "Matthew Angell",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/wompwomp',
     role: "Hardware Lead",
     joinedRIT: 2024,
     major: "Computer Engineering",
   },
   {
     name: "Joey Rosso",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/defect',
     role: "Embedded Lead",
     joinedRIT: 2025,
     major: "Software Engineering",
@@ -70,7 +70,7 @@ const currentTeam = [
 const formerTeam = [
   {
     name: "Tyler Severino",
-    img: image_default,
+    img: 'https://profiles.csh.rit.edu/image/geese',
     role: "Electrical Lead",
     major: "Electrical Engineering",
   },

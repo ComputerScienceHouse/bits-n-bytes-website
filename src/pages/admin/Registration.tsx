@@ -23,7 +23,7 @@ export default function RegistrationPage() {
       // console.log('Form Data:', formData)
 
       // TODO: redo this
-      const url = `${import.meta.env.VITE_PUBLIC_API_ENDPOINT}/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc-token=${formData.nfcToken}`;
+      const url = `${import.meta.env.VITE_PUBLIC_API_ENDPOINT}/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc_token=${formData.nfcToken}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -87,7 +87,6 @@ export default function RegistrationPage() {
                 placeholder="Enter email address"
                 value={formData.email}
                 onChange={handleChange}
-                required
               />
             </div>
 

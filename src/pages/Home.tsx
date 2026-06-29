@@ -158,7 +158,7 @@ export default function Home() {
             // how it works
           </p>
           <h2 className="mt-2 text-3xl md:text-4xl">Simplify the student experience.</h2>
-          <div className="grid gap-12 md:grid-cols-2">
+          <div className="grid gap-12  grid-cols-1 md:grid-cols-2">
           <div className="mt-10 grid gap-6 md:grid-cols-1">
             {[
               {
@@ -199,7 +199,7 @@ export default function Home() {
           {/* <p className="hidden text-sm text-muted-foreground md:block">← scroll →</p> */}
         </div>
         <div className="mt-8 -mx-6 px-6 overflow-x-auto">
-          <ul className="flex p-2 gap-4 pb-4 snap-x snap-mandatory">
+          <ul className="sm:py-10 md:flex p-2 gap-4 pb-4 snap-x snap-mandatory">
             {events.map((e) => (
               <li
                 key={e.name}
