@@ -5,7 +5,6 @@ import img2 from "../assets/hero-2.jpg";
 import img3 from "../assets/hero-3.jpg";
 import img4 from "../assets/hero-4.jpg";
 import img5 from "../assets/hero-5.png";
-import video from "../assets/video.mp4";
 import CSHLogo from "../assets/csh_logo_square.svg";
 import { useLayoutEffect, useRef } from "react";
 import VideoSection from "@/components/VideoPlayer";
@@ -80,7 +79,7 @@ export default function Home() {
             // intelligent vending
           </p>
           <h1 className="mt-4 text-5xl md:text-7xl drop-shadow-lg">
-            Bits <span className="text-orange -ml-8 -mr-6 tracking-tighter">‘n</span> Bytes
+            Bits <span className="text-orange -ml-6 -mr-4 md:-ml-8 md:-mr-6 tracking-tighter">‘n</span> Bytes
           </h1>
           <p className="mt-6 text-lg md:text-xl text-primary-foreground/90">
             The Future of Vending, Powered by AI.
