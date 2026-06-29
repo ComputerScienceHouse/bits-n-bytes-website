@@ -4,7 +4,6 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Admin from "./pages/admin/Dashboard";
 import NotFound from "./pages/NotFound";
-import BnBLogo from "./assets/BnBLogo.svg";
 import AppNav from "./components/AppNav";
 import InventoryPage from "./pages/admin/Inventory";
 import RegistrationPage from "./pages/admin/Registration";
@@ -16,17 +15,7 @@ function Header() {
       isActive ? "text-accent" : "text-primary-foreground/90"
     }`;
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-primary text-primary-foreground">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold">
-          <img src={BnBLogo} alt="BnB Logo SVG" className="h-10 w-10"></img>
-          <h1 className="my-auto drop-shadow-lg">
-            Bits <span className="text-orange -ml-1.5 -mr-1 tracking-tighter">‘n</span> Bytes
-          </h1>
-        </Link>
-        <AppNav />
-      </div>
-    </header>
+    <AppNav />
   );
 }
 
