@@ -68,8 +68,37 @@ const formerTeam = [
   {
     name: "Tyler Severino",
     img: 'https://profiles.csh.rit.edu/image/geese',
-    role: "Electrical Lead",
-    major: "Electrical Engineering",
+    role: "Electrical",
+  },
+  {
+    name: "Wilson Mcdade",
+    img: 'https://profiles.csh.rit.edu/image/mcdade',
+    role: "Director",
+  },
+  {
+    name: "Adam Neulight",
+    img: 'https://profiles.csh.rit.edu/image/boneless',
+    role: "Hardware",
+  },
+  {
+    name: "Ajay Singh",
+    img: 'https://profiles.csh.rit.edu/image/jays',
+    role: "Website",
+  },
+  {
+    name: "Will Herrick",
+    img: 'https://profiles.csh.rit.edu/image/willz',
+    role: "Showcase",
+  },
+  {
+    name: "Matthew Wilkins",
+    img: 'https://profiles.csh.rit.edu/image/milkins',
+    role: "Hardware",
+  },
+  {
+    name: "Olivia Dennehy",
+    img: 'https://profiles.csh.rit.edu/image/oliv',
+    role: "UI/UX",
   },
 ];
 
@@ -186,6 +215,24 @@ export default function About() {
             <li>RIT Dining</li>
             <li>Computer Science House Executive Board</li>
           </ul>
+        </div>
+      </div>
+
+      {/* Section 4 */}
+      <div className="mt-10 rounded-lg bg-secondary p-8 md:p-10">
+        <h3 className="text-xl mb-5">Former Team</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+          {formerTeam &&
+            formerTeam.map((member) => {
+              return (
+                <MemberCard
+                  imgref={member.img}
+                  name={member.name}
+                  role={member.role}
+                  major={member.major}
+                />
+              );
+            })}
         </div>
       </div>
 

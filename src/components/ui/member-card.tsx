@@ -2,8 +2,8 @@ type MemberCardProps = {
   imgref: string;
   name: string;
   role: string;
-  year: string;
-  major: string;
+  year?: string;
+  major?: string;
 };
 
 export default function MemberCard(memberInfo: MemberCardProps) {
@@ -18,8 +18,8 @@ export default function MemberCard(memberInfo: MemberCardProps) {
       </div>
       <p>{memberInfo.name}</p>
       <p className="text-primary">{memberInfo.role}</p>
-      <span>{memberInfo.year} </span>
-      <p>{memberInfo.major}</p>
+      {memberInfo.year && <span>{memberInfo.year} </span>}
+      {memberInfo.major && <p>{memberInfo.major} </p>}
     </div>
   );
 }
