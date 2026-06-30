@@ -2,9 +2,6 @@ import { useLayoutEffect } from "react";
 import img1 from "@/assets/hero-1.jpg";
 import MemberCard from "@/components/ui/member-card";
 
-// member images
-import image_default from "@/assets/BnBLogo.svg";
-
 // update every semester (hopefully)
 const academicYear = 2027;
 
@@ -121,7 +118,7 @@ export default function About() {
       {/* Section 2 */}
       <div className="mt-10 rounded-lg bg-secondary p-8 md:p-10">
         <h3 className="text-xl mb-5">About Computer Science House</h3>
-        <div className="flex text-foreground/90">
+        <div className="sm:flex text-foreground/90">
           <div>
             <p>
               Computer Science House (CSH) is a living learning community located on the third floor
@@ -144,6 +141,7 @@ export default function About() {
           </div>
           <div className="m-6 text-center">
             <svg
+              className="mx-auto"
               width="227"
               height="222"
               viewBox="0 0 227 222"
@@ -168,7 +166,7 @@ export default function About() {
       {/* Section 3 */}
       <div className="mt-10 rounded-lg bg-secondary p-8 md:p-10">
         <h3 className="text-xl mb-5">Team Credits</h3>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
           {currentTeam &&
             currentTeam.map((member) => {
               return (
