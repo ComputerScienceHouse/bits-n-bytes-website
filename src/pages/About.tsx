@@ -229,7 +229,6 @@ export default function About() {
                   imgref={member.img}
                   name={member.name}
                   role={member.role}
-                  major={member.major}
                 />
               );
             })}

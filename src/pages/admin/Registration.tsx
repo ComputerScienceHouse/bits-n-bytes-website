@@ -11,6 +11,7 @@ export default function RegistrationPage() {
     email: "",
     phone: "",
     nfcToken: "",
+    disable_camera: false,
   });
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +24,8 @@ export default function RegistrationPage() {
       // console.log('Form Data:', formData)
 
       // TODO: redo this
-      const url = `${import.meta.env.VITE_PUBLIC_API_ENDPOINT}/nfc/?name=${formData.username}&email=${formData.email}&phone=${formData.phone}&nfc_token=${formData.nfcToken}`;
+      const url = `${import.meta.env.VITE_PUBLIC_API_ENDPOINT}/nfc/?name=${formData.username}&email=${formData.email}
+      &phone=${formData.phone}&nfc_token=${formData.nfcToken}&disable_camera=${!(formData.disable_camera)}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -34,7 +36,7 @@ export default function RegistrationPage() {
 
       if (response.ok) {
         console.log("User registered successfully");
-        setFormData({ username: "", email: "", phone: "", nfcToken: "" });
+        setFormData({ username: "", email: "", phone: "", nfcToken: "", disable_camera: false });
       } else {
         console.error("Failed to register user", response);
       }
@@ -51,15 +53,15 @@ export default function RegistrationPage() {
   };
 
   return (
-    <div className="min-h-full flex items-center justify-center p-2 bg-linear-to-b from-background to-background/50">
-      <Card className="w-full max-w-md my-auto">
+    <div className="min-h-full flex items-center justify-center p-2 bg-background">
+      <Card className="w-full max-w-md my-auto bg-background">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-2">
             <div className="p-3 rounded-full bg-primary/10">
               <UserPlus className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">User Registration</CardTitle>
+          <CardTitle className="font-display text-2xl text-center">User Registration</CardTitle>
           <CardDescription className="text-center">
             Enter the new user&apos;s information below
           </CardDescription>
@@ -67,7 +69,7 @@ export default function RegistrationPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label className="font-display" htmlFor="username">Username</Label>
               <Input
                 id="username"
                 name="username"
@@ -79,31 +81,31 @@ export default function RegistrationPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label className="font-display" htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="Enter email address"
+                placeholder="Enter email address (optional)"
                 value={formData.email}
                 onChange={handleChange}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label className="font-display" htmlFor="phone">Phone Number</Label>
               <Input
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="Enter phone number"
+                placeholder="Enter phone number (optional)"
                 value={formData.phone}
                 onChange={handleChange}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nfcToken">NFC Token Number</Label>
+              <Label className="font-display" htmlFor="nfcToken">NFC Token Number</Label>
               <div className="flex space-x-2">
                 <Input
                   className="border-red-600 border-4 focus:border-none"
@@ -115,6 +117,17 @@ export default function RegistrationPage() {
                   required
                 />
               </div>
+            </div>
+
+            <div className="flex space-y-2 my-6 justify-between pr-10">
+              <Label className="font-display" htmlFor="nfcToken">Recording Opt-In</Label>
+              <Input
+                className="w-10"
+                 type="checkbox"
+                 id="disable_camera"
+                 name="disable_camera"
+                 onChange={(e) => {formData.disable_camera = e.target.checked}}
+                />
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
