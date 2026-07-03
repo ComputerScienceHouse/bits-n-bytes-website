@@ -100,6 +100,11 @@ const formerTeam = [
     img: 'https://profiles.csh.rit.edu/image/oliv',
     role: "UI/UX",
   },
+  {
+    name: "Logan Endes",
+    img: 'https://profiles.csh.rit.edu/image/log',
+    role: "AI",
+  },
 ];
 
 export default function About() {
