@@ -31,7 +31,7 @@ export default function Profile() {
             alt="profile picture"
             className="w-6 h-6 rounded-full bg-accent"
           />
-          <span className="my-auto">ak</span>
+          <span className="my-auto">{userInfo.preferred_username}</span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
