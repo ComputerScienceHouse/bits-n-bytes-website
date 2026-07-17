@@ -1,0 +1,141 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { UserPlus } from "lucide-react";
+
+export default function RegistrationPage() {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    phone: "",
+    nfcToken: "",
+    disable_camera: false,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Print to console for debugging
+      // console.log('Form Data:', formData)
+
+      // TODO: redo this
+      const url = `${import.meta.env.VITE_PUBLIC_API_ENDPOINT}/nfc/?name=${formData.username}&email=${formData.email}
+      &phone=${formData.phone}&nfc_token=${formData.nfcToken}&disable_camera=${!(formData.disable_camera)}`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: import.meta.env.VITE_PUBLIC_API_AUTH || "",
+        },
+      });
+
+      if (response.ok) {
+        console.log("User registered successfully");
+        setFormData({ username: "", email: "", phone: "", nfcToken: "", disable_camera: false });
+      } else {
+        console.error("Failed to register user", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    setLoading(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  return (
+    <div className="min-h-full flex items-center justify-center p-2 bg-background">
+      <Card className="w-full max-w-md my-auto bg-background">
+        <CardHeader className="space-y-1">
+          <div className="flex items-center justify-center mb-2">
+            <div className="p-3 rounded-full bg-primary/10">
+              <UserPlus className="h-6 w-6 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="font-display text-2xl text-center">User Registration</CardTitle>
+          <CardDescription className="text-center">
+            Enter the new user&apos;s information below
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label className="font-display" htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                name="username"
+                placeholder="Enter username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-display" htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter email address (optional)"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-display" htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="Enter phone number (optional)"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-display" htmlFor="nfcToken">NFC Token Number</Label>
+              <div className="flex space-x-2">
+                <Input
+                  className="border-red-600 border-4 focus:border-none"
+                  id="nfcToken"
+                  name="nfcToken"
+                  placeholder="Tap card to scan (select this box first)"
+                  value={formData.nfcToken}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex space-y-2 my-6 justify-between pr-10">
+              <Label className="font-display" htmlFor="nfcToken">Recording Opt-In</Label>
+              <Input
+                className="w-10"
+                 type="checkbox"
+                 id="disable_camera"
+                 name="disable_camera"
+                 onChange={(e) => {formData.disable_camera = e.target.checked}}
+                />
+            </div>
+
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Registering..." : "Register User"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

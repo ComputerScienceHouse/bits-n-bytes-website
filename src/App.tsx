@@ -1,0 +1,77 @@
+import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Admin from "./pages/admin/Dashboard";
+import NotFound from "./pages/NotFound";
+import AppNav from "./components/AppNav";
+import InventoryPage from "./pages/admin/Inventory";
+import RegistrationPage from "./pages/admin/Registration";
+import { OidcSecure } from "@axa-fr/react-oidc";
+
+function Header() {
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    `px-3 py-2 text-sm font-medium transition-colors hover:text-accent ${
+      isActive ? "text-accent" : "text-primary-foreground/90"
+    }`;
+  return (
+    <AppNav />
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t bg-primary text-primary-foreground/80">
+      <div className="mx-auto max-w-6xl px-6 py-8 text-sm flex flex-wrap items-center justify-between gap-2">
+        <p>© {new Date().getFullYear()} Bits 'n Bytes @ Computer Science House</p>
+        <p className="font-display text-xs uppercase tracking-widest text-accent">
+          doing more at 2am than anyone else.
+        </p>
+      </div>
+    </footer>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="flex min-h-screen flex-col">
+        {/* <TopBanner /> */}
+        <Header />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route
+              path="/admin"
+              element={
+                <OidcSecure>
+                  <Admin />
+                </OidcSecure>
+              }
+            />
+            <Route
+              path="/admin/inventory"
+              element={
+                <OidcSecure>
+                  <InventoryPage />
+                </OidcSecure>
+              }
+            />
+            <Route
+              path="/admin/registration"
+              element={
+                <OidcSecure>
+                  <RegistrationPage />
+                </OidcSecure>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  );
+}

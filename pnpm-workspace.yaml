@@ -1,0 +1,4 @@
+allowBuilds:
+  '@axa-fr/oidc-client': true
+  '@axa-fr/react-oidc': true
+  esbuild: true
