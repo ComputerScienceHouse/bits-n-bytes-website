@@ -7,6 +7,8 @@ import NotFound from "./pages/NotFound";
 import AppNav from "./components/AppNav";
 import InventoryPage from "./pages/admin/Inventory";
 import RegistrationPage from "./pages/admin/Registration";
+import ReceiptInvalid from "./pages/receipt/ReceiptInvalid";
+import Receipt from "./pages/receipt/ReceiptDisplay";
 import { OidcSecure } from "@axa-fr/react-oidc";
 
 function Header() {
@@ -38,11 +40,15 @@ export default function App() {
       <div className="flex min-h-screen flex-col">
         {/* <TopBanner /> */}
         <Header />
-        <main className="flex-1">
+        <main className="flex-1 flex-col flex">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            {/* receipt routes */}
+            <Route path="receipt/invalid" element={<ReceiptInvalid />} />
+            <Route path="receipt/:UID" element={<Receipt />} />
+            {/* admin routes (REQUIRES AUTH) */}
             <Route
               path="/admin"
               element={
