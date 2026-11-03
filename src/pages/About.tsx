@@ -1,6 +1,7 @@
 import { useLayoutEffect } from "react";
 import img1 from "@/assets/hero-1.jpg";
 import MemberCard from "@/components/ui/member-card";
+import blankpfp from "../assets/blank-pfp.png";
 
 // update every semester (hopefully)
 const academicYear = 2027;
@@ -12,20 +13,6 @@ const currentTeam = [
     role: "Director, Spring 2026",
     joinedRIT: 2024,
     major: "Software Engineering",
-  },
-  {
-    name: "Sahil Patel",
-    img: 'https://profiles.csh.rit.edu/image/itsahill',
-    role: "Director, Fall 2026",
-    joinedRIT: 2022,
-    major: "Computer Science",
-  },
-  {
-    name: "Isaac Ingram",
-    img: 'https://profiles.csh.rit.edu/image/isaac',
-    role: "Director, 2025",
-    joinedRIT: 2022,
-    major: "Computer Science",
   },
   {
     name: "Maelyn VonStettina-May",
@@ -50,7 +37,7 @@ const currentTeam = [
   },
   {
     name: "Matthew Angell",
-    img: 'https://profiles.csh.rit.edu/image/wompwomp',
+    img: blankpfp,
     role: "Hardware Lead",
     joinedRIT: 2024,
     major: "Computer Engineering",
@@ -104,6 +91,20 @@ const formerTeam = [
     name: "Logan Endes",
     img: 'https://profiles.csh.rit.edu/image/log',
     role: "AI",
+  },
+  {
+    name: "Sahil Patel",
+    img: 'https://profiles.csh.rit.edu/image/itsahill',
+    role: "Director, Fall 2026",
+    joinedRIT: 2022,
+    major: "Computer Science",
+  },
+  {
+    name: "Isaac Ingram",
+    img: 'https://profiles.csh.rit.edu/image/isaac',
+    role: "Director, 2025",
+    joinedRIT: 2022,
+    major: "Computer Science",
   },
 ];
 

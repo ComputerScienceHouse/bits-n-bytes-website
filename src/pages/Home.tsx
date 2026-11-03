@@ -222,7 +222,7 @@ export default function Home() {
             <img src={CSHLogo} alt="CSH Logo" className="w-20"></img>
             <div className="my-auto">
               <h2 className="text-2xl md:text-3xl">
-                Student-Made at <span className="underline">Computer Science House.</span>
+                Student-Made at Computer Science House.
               </h2>
               <p className="mt-2 text-primary-foreground/80">
                 Check out what else we're working on.
